@@ -138,11 +138,11 @@
 <script>
 /* ============ KONFIGURACIJA – upišite svoje vrijednosti ============ */
 const CONFIG = {
-  tenantId:    "UPISATI-DIRECTORY-TENANT-ID",
-  clientId:    "UPISATI-APPLICATION-CLIENT-ID",
+  tenantId:    "08ee12ee-23ed-461f-a6bd-d22bbd18980f",
+  clientId:    "f90e3e6b-411d-4dc6-9d66-8b1324c8a65f",
   redirectUri: "https://admin-curling-hr.github.io/registri/",
   spHost:      "curlinghr.sharepoint.com",
-  sitePath:    "/sites/UPISATI-NAZIV-SITEA",
+  sitePath:    "",
   lists:       ["Registar igrača", "Registar klubova"]
 };
 /* ================================================================== */
@@ -256,7 +256,9 @@ function fmt(v, col) {
 async function loadData() {
   try {
     setStatus("Tražim SharePoint site…");
-    const site = await graph("/sites/" + CONFIG.spHost + ":" + CONFIG.sitePath);
+    const site = await graph(CONFIG.sitePath
+      ? "/sites/" + CONFIG.spHost + ":" + CONFIG.sitePath
+	  : "/sites/" + CONFIG.spHost);
     const lists = await graph("/sites/" + site.id + "/lists?$select=id,displayName");
     const container = $("#lists");
     container.innerHTML = "";
