@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Registri HCS · pilot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Semi+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ice: #EEF4F8;
+    --surface: #FFFFFF;
+    --ink: #1A2530;
+    --muted: #5B6B78;
+    --line: #D3DEE6;
+    --navy: #12304A;
+    --house-red: #C8102E;
+    --house-blue: #1F5FA8;
+    --ok-bg: #E6F2EA; --ok-ink: #1D5E33;
+    --err-bg: #FBE9EB; --err-ink: #8A1023;
+    --info-bg: #E7EFF8; --info-ink: #1F4E86;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ice: #0F1A23;
+      --surface: #16232E;
+      --ink: #E4ECF2;
+      --muted: #9AACBA;
+      --line: #2A3B49;
+      --navy: #0B1620;
+      --house-red: #E0475E;
+      --house-blue: #5C95D6;
+      --ok-bg: #173323; --ok-ink: #9ED8B2;
+      --err-bg: #3A1820; --err-ink: #F2A7B3;
+      --info-bg: #172B40; --info-ink: #A9C9EE;
+      color-scheme: dark;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--ice);
+    color: var(--ink);
+    font: 16px/1.5 "Barlow", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  header {
+    background: var(--navy);
+    color: #fff;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .house {
+    width: 44px; height: 44px; border-radius: 50%; flex: none;
+    background: radial-gradient(circle,
+      #fff 0 14%, var(--house-red) 14% 38%, #fff 38% 58%, var(--house-blue) 58% 100%);
+    box-shadow: 0 0 0 2px rgba(255,255,255,.25);
+  }
+  h1 {
+    font-family: "Barlow Semi Condensed", "Barlow", sans-serif;
+    font-weight: 700; font-size: 1.6rem; letter-spacing: .01em;
+    margin: 0; line-height: 1.1;
+  }
+  header small { display: block; font-size: .85rem; opacity: .75; font-weight: 400; }
+  .who { margin-left: auto; display: flex; align-items: center; gap: 12px; font-size: .95rem; }
+  button {
+    font: inherit; font-weight: 600; cursor: pointer;
+    border-radius: 6px; padding: 8px 16px; border: 1px solid transparent;
+  }
+  .btn-primary { background: var(--house-red); color: #fff; }
+  .btn-ghost { background: transparent; color: #fff; border-color: rgba(255,255,255,.45); }
+  button:focus-visible, input:focus-visible { outline: 3px solid var(--house-blue); outline-offset: 2px; }
+  main { max-width: 1200px; margin: 0 auto; padding: 24px; }
+  .status { padding: 12px 16px; border-radius: 6px; margin-bottom: 20px; white-space: pre-wrap; }
+  .status.info { background: var(--info-bg); color: var(--info-ink); }
+  .status.ok { background: var(--ok-bg); color: var(--ok-ink); }
+  .status.error { background: var(--err-bg); color: var(--err-ink); }
+  section {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+    padding: 20px; margin-bottom: 24px;
+  }
+  h3 { font-size: 1rem; margin: 20px 0 4px; }
+  h2 {
+    font-family: "Barlow Semi Condensed", "Barlow", sans-serif;
+    font-size: 1.25rem; margin: 0 0 4px;
+  }
+  .hint { color: var(--muted); margin: 0 0 16px; font-size: .95rem; }
+  .facts { display: flex; gap: 32px; flex-wrap: wrap; margin: 0; }
+  .facts div dt { color: var(--muted); font-size: .85rem; }
+  .facts div dd { margin: 0; font-weight: 600; font-size: 1.1rem; }
+  .scroll { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-weight: 600; color: var(--muted); white-space: nowrap; }
+  tbody tr:hover { background: var(--ice); }
+  code { font-family: Consolas, "Courier New", monospace; font-size: .9em; }
+  .search {
+    width: 100%; max-width: 360px; padding: 8px 12px; margin-bottom: 12px;
+    font: inherit; color: var(--ink); background: var(--surface);
+    border: 1px solid var(--line); border-radius: 6px;
+  }
+  .hidden { display: none; }
+  .signin { text-align: center; padding: 48px 20px; }
+  .signin p { color: var(--muted); max-width: 46ch; margin: 0 auto 20px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="house" aria-hidden="true"></div>
+  <div>
+    <h1>Registri HCS</h1>
+    <small>Hrvatski curling savez · pilot veze na SharePoint</small>
+  </div>
+  <div class="who">
+    <span id="userName"></span>
+    <button id="btnLogout" class="btn-ghost hidden">Odjavi se</button>
+  </div>
+</header>
+
+<main>
+  <div id="status" class="status info">Pokrećem…</div>
+
+  <section id="signin" class="signin hidden">
+    <h2>Prijava</h2>
+    <p>Prijavite se računom Hrvatskog curling saveza. Prijava se odvija na Microsoftovoj stranici, uz drugi faktor ako ga imate postavljenog.</p>
+    <button id="btnLogin" class="btn-primary">Prijavi se</button>
+  </section>
+
+  <div id="lists"></div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@azure/msal-browser@3.27.0/lib/msal-browser.min.js"></script>
+<script>
+/* ============ KONFIGURACIJA – upišite svoje vrijednosti ============ */
+const CONFIG = {
+  tenantId:    "UPISATI-DIRECTORY-TENANT-ID",
+  clientId:    "UPISATI-APPLICATION-CLIENT-ID",
+  redirectUri: "https://admin-curling-hr.github.io/registri/",
+  spHost:      "curlinghr.sharepoint.com",
+  sitePath:    "/sites/UPISATI-NAZIV-SITEA",
+  lists:       ["Registar igrača", "Registar klubova"]
+};
+/* ================================================================== */
+
+const SCOPES = ["User.Read", "Sites.ReadWrite.All"];
+const GRAPH = "https://graph.microsoft.com/v1.0";
+const SKIP_COLS = new Set([
+  "ContentType", "Attachments", "LinkTitle", "LinkTitleNoMenu", "Edit", "DocIcon",
+  "ItemChildCount", "FolderChildCount", "_ComplianceFlags", "_ComplianceTag",
+  "_ComplianceTagWrittenTime", "_ComplianceTagUserId", "_IsRecord", "AppAuthor",
+  "AppEditor", "_UIVersionString", "_ColorTag", "ComplianceAssetId"
+]);
+
+const $ = (s) => document.querySelector(s);
+let msalApp = null;
+let account = null;
+
+function setStatus(msg, kind = "info") {
+  const el = $("#status");
+  el.textContent = msg;
+  el.className = "status " + kind;
+}
+function show(id, on = true) { $(id).classList.toggle("hidden", !on); }
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, (c) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+
+async function init() {
+  if (typeof msal === "undefined") {
+    setStatus("Knjižnica za prijavu (MSAL) se nije učitala. Provjerite internetsku vezu ili blokator sadržaja.", "error");
+    return;
+  }
+  if (CONFIG.clientId.startsWith("UPISATI") || CONFIG.tenantId.startsWith("UPISATI") || CONFIG.sitePath.includes("UPISATI")) {
+    setStatus("U datoteci index.html, u bloku CONFIG, upišite tenantId, clientId i sitePath.", "error");
+    return;
+  }
+  msalApp = new msal.PublicClientApplication({
+    auth: {
+      clientId: CONFIG.clientId,
+      authority: "https://login.microsoftonline.com/" + CONFIG.tenantId,
+      redirectUri: CONFIG.redirectUri
+    },
+    cache: { cacheLocation: "sessionStorage" }
+  });
+  await msalApp.initialize();
+
+  try {
+    const resp = await msalApp.handleRedirectPromise();
+    account = resp ? resp.account : (msalApp.getAllAccounts()[0] || null);
+  } catch (e) {
+    setStatus("Prijava nije uspjela:\n" + e.message, "error");
+    show("#signin");
+    return;
+  }
+
+  if (!account) {
+    setStatus("Niste prijavljeni.", "info");
+    show("#signin");
+    return;
+  }
+  $("#userName").textContent = account.name || account.username;
+  show("#btnLogout");
+  await loadData();
+}
+
+async function getToken() {
+  try {
+    const r = await msalApp.acquireTokenSilent({ scopes: SCOPES, account });
+    return r.accessToken;
+  } catch (e) {
+    if (e instanceof msal.InteractionRequiredAuthError) {
+      await msalApp.acquireTokenRedirect({ scopes: SCOPES, account });
+      return null;
+    }
+    throw e;
+  }
+}
+
+async function graph(pathOrUrl) {
+  const token = await getToken();
+  if (!token) throw new Error("Potrebna je ponovna prijava.");
+  const url = pathOrUrl.startsWith("https://") ? pathOrUrl : GRAPH + pathOrUrl;
+  const res = await fetch(url, { headers: { Authorization: "Bearer " + token } });
+  if (!res.ok) {
+    let detail = "";
+    try { const j = await res.json(); detail = j.error && j.error.message ? j.error.message : ""; } catch (_) {}
+    throw new Error("Graph " + res.status + " za " + url.replace(GRAPH, "") + (detail ? "\n" + detail : ""));
+  }
+  return res.json();
+}
+
+function colType(c) {
+  for (const t of ["text", "choice", "dateTime", "number", "boolean", "lookup", "personOrGroup", "currency", "calculated"]) {
+    if (c[t]) return t;
+  }
+  return "—";
+}
+
+function fmt(v, col) {
+  if (v === null || v === undefined || v === "") return "";
+  if (col && col.dateTime && typeof v === "string") {
+    const d = new Date(v);
+    if (!isNaN(d)) return d.toLocaleDateString("hr-HR");
+  }
+  if (Array.isArray(v)) return v.map((x) => (typeof x === "object" ? (x.LookupValue ?? JSON.stringify(x)) : x)).join(", ");
+  if (typeof v === "object") return v.LookupValue ?? v.Email ?? JSON.stringify(v);
+  return String(v);
+}
+
+async function loadData() {
+  try {
+    setStatus("Tražim SharePoint site…");
+    const site = await graph("/sites/" + CONFIG.spHost + ":" + CONFIG.sitePath);
+    const lists = await graph("/sites/" + site.id + "/lists?$select=id,displayName");
+    const container = $("#lists");
+    container.innerHTML = "";
+    const summary = [];
+
+    for (const name of CONFIG.lists) {
+      const list = lists.value.find((l) => l.displayName === name);
+      if (!list) {
+        throw new Error("Lista „" + name + "“ nije pronađena na siteu „" + (site.displayName || site.name) +
+          "“.\nDostupne liste: " + lists.value.map((l) => l.displayName).join(", "));
+      }
+      setStatus("Čitam „" + name + "“…");
+      const cols = await graph("/sites/" + site.id + "/lists/" + list.id + "/columns");
+      const visibleCols = cols.value.filter((c) => !c.hidden && !c.readOnly && !SKIP_COLS.has(c.name));
+
+      const rows = [];
+      let next = "/sites/" + site.id + "/lists/" + list.id + "/items?$expand=fields&$top=500";
+      while (next) {
+        const page = await graph(next);
+        rows.push(...page.value.map((i) => i.fields));
+        next = page["@odata.nextLink"] || null;
+      }
+      container.appendChild(renderList(list.displayName, visibleCols, rows));
+      summary.push(list.displayName + ": " + rows.length);
+    }
+    setStatus("Veza radi (site „" + (site.displayName || site.name) + "“). " + summary.join(" · "), "ok");
+  } catch (e) {
+    setStatus(e.message, "error");
+  }
+}
+
+function renderList(title, cols, rows) {
+  const sec = document.createElement("section");
+  const head = "<tr>" + cols.map((c) => "<th>" + esc(c.displayName) + "</th>").join("") + "</tr>";
+  sec.innerHTML =
+    "<h2>" + esc(title) + "</h2>" +
+    "<p class='hint'>" + rows.length + " zapisa</p>" +
+    "<h3>Mapa stupaca</h3>" +
+    "<p class='hint'>Prikazno ime i interno ime koje koristi Graph. Ovu tablicu možete poslati za izradu pune aplikacije – ne sadrži osobne podatke.</p>" +
+    "<div class='scroll'><table><thead><tr><th>Prikazno ime</th><th>Interno ime</th><th>Tip</th><th>Obavezno</th></tr></thead><tbody>" +
+    cols.map((c) => "<tr><td>" + esc(c.displayName) + "</td><td><code>" + esc(c.name) + "</code></td><td>" +
+      esc(colType(c)) + "</td><td>" + (c.required ? "da" : "") + "</td></tr>").join("") +
+    "</tbody></table></div>" +
+    "<h3>Zapisi</h3>" +
+    "<input class='search' type='search' placeholder='Pretraži sve stupce' aria-label='Pretraži: " + esc(title) + "'>" +
+    "<div class='scroll'><table><thead>" + head + "</thead><tbody></tbody></table></div>";
+
+  const tbody = sec.querySelectorAll("tbody")[1];
+  const draw = (q) => {
+    const needle = q.trim().toLowerCase();
+    const shown = needle
+      ? rows.filter((r) => cols.some((c) => fmt(r[c.name], c).toLowerCase().includes(needle)))
+      : rows;
+    tbody.innerHTML = shown.map((r) =>
+      "<tr>" + cols.map((c) => "<td>" + esc(fmt(r[c.name], c)) + "</td>").join("") + "</tr>").join("");
+  };
+  sec.querySelector(".search").addEventListener("input", (e) => draw(e.target.value));
+  draw("");
+  return sec;
+}
+
+$("#btnLogin").addEventListener("click", () => msalApp.loginRedirect({ scopes: SCOPES }));
+$("#btnLogout").addEventListener("click", () =>
+  msalApp.logoutRedirect({ account, postLogoutRedirectUri: CONFIG.redirectUri }));
+
+init();
+</script>
+</body>
+</html>
