@@ -3,327 +3,898 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Registri HCS · pilot</title>
+<title>Registri HCS</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Semi+Condensed:wght@600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --ice: #EEF4F8;
-    --surface: #FFFFFF;
-    --ink: #1A2530;
-    --muted: #5B6B78;
-    --line: #D3DEE6;
-    --navy: #12304A;
-    --house-red: #C8102E;
-    --house-blue: #1F5FA8;
+    --ice: #EEF4F8; --surface: #FFFFFF; --ink: #1A2530; --muted: #5B6B78; --line: #D3DEE6;
+    --navy: #12304A; --red: #C8102E; --blue: #1F5FA8;
     --ok-bg: #E6F2EA; --ok-ink: #1D5E33;
+    --warn-bg: #FFF3D6; --warn-ink: #7A5200;
     --err-bg: #FBE9EB; --err-ink: #8A1023;
     --info-bg: #E7EFF8; --info-ink: #1F4E86;
+    --shade: rgba(18, 48, 74, .35);
     color-scheme: light;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --ice: #0F1A23;
-      --surface: #16232E;
-      --ink: #E4ECF2;
-      --muted: #9AACBA;
-      --line: #2A3B49;
-      --navy: #0B1620;
-      --house-red: #E0475E;
-      --house-blue: #5C95D6;
+      --ice: #0F1A23; --surface: #16232E; --ink: #E4ECF2; --muted: #9AACBA; --line: #2A3B49;
+      --navy: #0B1620; --red: #E0475E; --blue: #5C95D6;
       --ok-bg: #173323; --ok-ink: #9ED8B2;
+      --warn-bg: #3A2E10; --warn-ink: #F0CF7A;
       --err-bg: #3A1820; --err-ink: #F2A7B3;
       --info-bg: #172B40; --info-ink: #A9C9EE;
+      --shade: rgba(0, 0, 0, .55);
       color-scheme: dark;
     }
   }
   * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    background: var(--ice);
-    color: var(--ink);
-    font: 16px/1.5 "Barlow", system-ui, -apple-system, "Segoe UI", sans-serif;
-  }
-  header {
-    background: var(--navy);
-    color: #fff;
-    padding: 18px 24px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    flex-wrap: wrap;
-  }
-  .house {
-    width: 44px; height: 44px; border-radius: 50%; flex: none;
-    background: radial-gradient(circle,
-      #fff 0 14%, var(--house-red) 14% 38%, #fff 38% 58%, var(--house-blue) 58% 100%);
-    box-shadow: 0 0 0 2px rgba(255,255,255,.25);
-  }
-  h1 {
-    font-family: "Barlow Semi Condensed", "Barlow", sans-serif;
-    font-weight: 700; font-size: 1.6rem; letter-spacing: .01em;
-    margin: 0; line-height: 1.1;
-  }
-  header small { display: block; font-size: .85rem; opacity: .75; font-weight: 400; }
+  body { margin: 0; background: var(--ice); color: var(--ink);
+    font: 16px/1.5 "Barlow", system-ui, -apple-system, "Segoe UI", sans-serif; }
+  button, input, select, textarea { font: inherit; color: inherit; }
+  button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible,
+  a:focus-visible, tr:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+
+  header { background: var(--navy); color: #fff; padding: 14px 24px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .house { width: 40px; height: 40px; border-radius: 50%; flex: none;
+    background: radial-gradient(circle, #fff 0 14%, var(--red) 14% 38%, #fff 38% 58%, var(--blue) 58% 100%);
+    box-shadow: 0 0 0 2px rgba(255,255,255,.25); }
+  h1, h2, h3 { font-family: "Barlow Semi Condensed", "Barlow", sans-serif; line-height: 1.15; }
+  h1 { font-size: 1.5rem; margin: 0; }
+  nav { display: flex; gap: 4px; margin-left: 12px; }
+  nav a { color: rgba(255,255,255,.75); text-decoration: none; padding: 6px 14px; border-radius: 6px; font-weight: 600; }
+  nav a[aria-current="page"] { color: #fff; background: rgba(255,255,255,.14); }
   .who { margin-left: auto; display: flex; align-items: center; gap: 12px; font-size: .95rem; }
-  button {
-    font: inherit; font-weight: 600; cursor: pointer;
-    border-radius: 6px; padding: 8px 16px; border: 1px solid transparent;
-  }
-  .btn-primary { background: var(--house-red); color: #fff; }
-  .btn-ghost { background: transparent; color: #fff; border-color: rgba(255,255,255,.45); }
-  button:focus-visible, input:focus-visible { outline: 3px solid var(--house-blue); outline-offset: 2px; }
-  main { max-width: 1200px; margin: 0 auto; padding: 24px; }
+
+  .btn { cursor: pointer; border-radius: 6px; padding: 8px 16px; border: 1px solid var(--line); background: var(--surface); font-weight: 600; }
+  .btn-primary { background: var(--red); color: #fff; border-color: var(--red); }
+  .btn-header { background: transparent; color: #fff; border-color: rgba(255,255,255,.45); }
+  .btn:disabled { opacity: .55; cursor: default; }
+  .link { background: none; border: 0; color: var(--blue); cursor: pointer; padding: 0; font-weight: 600; }
+
+  main { max-width: 1240px; margin: 0 auto; padding: 24px; }
   .status { padding: 12px 16px; border-radius: 6px; margin-bottom: 20px; white-space: pre-wrap; }
   .status.info { background: var(--info-bg); color: var(--info-ink); }
-  .status.ok { background: var(--ok-bg); color: var(--ok-ink); }
   .status.error { background: var(--err-bg); color: var(--err-ink); }
-  section {
-    background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
-    padding: 20px; margin-bottom: 24px;
-  }
-  h3 { font-size: 1rem; margin: 20px 0 4px; }
-  h2 {
-    font-family: "Barlow Semi Condensed", "Barlow", sans-serif;
-    font-size: 1.25rem; margin: 0 0 4px;
-  }
-  .hint { color: var(--muted); margin: 0 0 16px; font-size: .95rem; }
-  .facts { display: flex; gap: 32px; flex-wrap: wrap; margin: 0; }
-  .facts div dt { color: var(--muted); font-size: .85rem; }
-  .facts div dd { margin: 0; font-weight: 600; font-size: 1.1rem; }
+  .hidden { display: none !important; }
+
+  .toolbar { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; }
+  .toolbar input[type=search] { flex: 1 1 240px; max-width: 360px; }
+  .toolbar .spacer { flex: 1; }
+  input[type=search], input[type=text], input[type=date], input[type=email], select, textarea {
+    padding: 8px 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; width: 100%; }
+  .toolbar select { width: auto; }
+  textarea { min-height: 90px; resize: vertical; }
+
+  .stats { display: flex; gap: 24px; flex-wrap: wrap; margin: 0 0 16px; color: var(--muted); }
+  .stats b { color: var(--ink); font-size: 1.15rem; margin-right: 4px; }
+
+  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; }
   .scroll { overflow-x: auto; }
   table { border-collapse: collapse; width: 100%; font-size: .95rem; }
-  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: middle; }
   th { font-weight: 600; color: var(--muted); white-space: nowrap; }
+  tbody tr { cursor: pointer; }
   tbody tr:hover { background: var(--ice); }
-  code { font-family: Consolas, "Courier New", monospace; font-size: .9em; }
-  .search {
-    width: 100%; max-width: 360px; padding: 8px 12px; margin-bottom: 12px;
-    font: inherit; color: var(--ink); background: var(--surface);
-    border: 1px solid var(--line); border-radius: 6px;
-  }
-  .hidden { display: none; }
+  tbody tr:last-child td { border-bottom: 0; }
+  tr.inactive td { color: var(--muted); }
+  .num { font-variant-numeric: tabular-nums; }
+  .empty { padding: 32px; text-align: center; color: var(--muted); }
+
+  .badge { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: .85rem; font-weight: 600; white-space: nowrap; }
+  .b-ok { background: var(--ok-bg); color: var(--ok-ink); }
+  .b-warn { background: var(--warn-bg); color: var(--warn-ink); }
+  .b-err { background: var(--err-bg); color: var(--err-ink); }
+  .b-off { background: var(--ice); color: var(--muted); }
+
+  .backdrop { position: fixed; inset: 0; background: var(--shade); z-index: 20; }
+  .drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(580px, 100%); background: var(--surface);
+    z-index: 21; display: flex; flex-direction: column; box-shadow: -8px 0 24px rgba(0,0,0,.18); }
+  .drawer-head { display: flex; align-items: flex-start; gap: 12px; padding: 20px 24px 12px; border-bottom: 1px solid var(--line); }
+  .drawer-head h2 { margin: 0; font-size: 1.45rem; }
+  .drawer-head .sub { color: var(--muted); font-size: .95rem; }
+  .drawer-head .close { margin-left: auto; font-size: 1.4rem; line-height: 1; padding: 4px 10px; }
+  .drawer-body { padding: 20px 24px; overflow-y: auto; flex: 1; }
+  .drawer-foot { padding: 14px 24px; border-top: 1px solid var(--line); display: flex; gap: 10px; flex-wrap: wrap; }
+
+  dl.fields { display: grid; grid-template-columns: minmax(150px, 40%) 1fr; gap: 8px 16px; margin: 0 0 20px; }
+  dl.fields dt { color: var(--muted); }
+  dl.fields dd { margin: 0; overflow-wrap: anywhere; white-space: pre-wrap; }
+  h3 { font-size: 1.1rem; margin: 24px 0 10px; }
+
+  .timeline { list-style: none; margin: 0; padding: 0 0 0 18px; border-left: 2px solid var(--line); }
+  .timeline li { position: relative; padding: 0 0 12px 8px; }
+  .timeline li::before { content: ""; position: absolute; left: -25px; top: 7px; width: 10px; height: 10px; border-radius: 50%; background: var(--blue); border: 2px solid var(--surface); }
+  .timeline li.stop::before { background: var(--muted); }
+  .timeline li.raw { color: var(--muted); }
+  .timeline time { font-weight: 600; margin-right: 6px; font-variant-numeric: tabular-nums; }
+
+  form .row { margin-bottom: 14px; }
+  form label { display: block; font-weight: 600; margin-bottom: 4px; }
+  form label .req { color: var(--red); }
+  form .help { color: var(--muted); font-size: .9rem; margin: 4px 0 0; }
+  details { border: 1px solid var(--line); border-radius: 6px; padding: 10px 14px; margin-top: 8px; }
+  details summary { cursor: pointer; font-weight: 600; }
+  .formerr { background: var(--err-bg); color: var(--err-ink); padding: 10px 12px; border-radius: 6px; margin-bottom: 14px; white-space: pre-wrap; }
+
+  .toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); background: var(--navy); color: #fff;
+    padding: 10px 18px; border-radius: 6px; z-index: 30; box-shadow: 0 4px 16px rgba(0,0,0,.25); }
+
   .signin { text-align: center; padding: 48px 20px; }
   .signin p { color: var(--muted); max-width: 46ch; margin: 0 auto 20px; }
+  footer { max-width: 1240px; margin: 0 auto; padding: 8px 24px 32px; color: var(--muted); font-size: .9rem; }
+  footer a { color: var(--muted); }
+  .tool { padding: 20px; margin-bottom: 20px; }
+  .tool h2 { margin: 0 0 8px; }
+  pre.preview { background: var(--ice); padding: 12px; border-radius: 6px; white-space: pre-wrap; font-size: .9rem; }
+
+  @media (max-width: 760px) {
+    .col-opt { display: none; }
+    header { padding: 12px 16px; }
+    nav { margin-left: 0; order: 3; width: 100%; }
+    main { padding: 16px; }
+    dl.fields { grid-template-columns: 1fr; gap: 0 0; }
+    dl.fields dd { margin-bottom: 10px; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .drawer { animation: slidein .18s ease-out; }
+    @keyframes slidein { from { transform: translateX(24px); opacity: .6; } to { transform: none; opacity: 1; } }
+  }
 </style>
 </head>
 <body>
 
 <header>
   <div class="house" aria-hidden="true"></div>
-  <div>
-    <h1>Registri HCS</h1>
-    <small>Hrvatski curling savez · pilot veze na SharePoint</small>
-  </div>
+  <h1>Registri HCS</h1>
+  <nav id="nav" class="hidden" aria-label="Registri">
+    <a href="#igraci" data-view="igraci">Igrači</a>
+    <a href="#klubovi" data-view="klubovi">Klubovi</a>
+  </nav>
   <div class="who">
     <span id="userName"></span>
-    <button id="btnLogout" class="btn-ghost hidden">Odjavi se</button>
+    <button id="btnLogout" class="btn btn-header hidden">Odjavi se</button>
   </div>
 </header>
 
 <main>
   <div id="status" class="status info">Pokrećem…</div>
 
-  <section id="signin" class="signin hidden">
+  <section id="signin" class="panel signin hidden">
     <h2>Prijava</h2>
     <p>Prijavite se računom Hrvatskog curling saveza. Prijava se odvija na Microsoftovoj stranici, uz drugi faktor ako ga imate postavljenog.</p>
-    <button id="btnLogin" class="btn-primary">Prijavi se</button>
+    <button id="btnLogin" class="btn btn-primary">Prijavi se</button>
   </section>
 
-  <div id="lists"></div>
+  <!-- IGRAČI -->
+  <section id="view-igraci" class="hidden">
+    <div class="toolbar">
+      <input id="pSearch" type="search" placeholder="Prezime, ime ili registarski broj" aria-label="Pretraži igrače">
+      <select id="pClub" aria-label="Klub"></select>
+      <select id="pStatus" aria-label="Status registracije">
+        <option value="active">Registrirani</option>
+        <option value="inactive">S prestankom registracije</option>
+        <option value="all">Svi igrači</option>
+      </select>
+      <select id="pHealth" aria-label="Zdravstveno uvjerenje">
+        <option value="">Zdravstveno: sve</option>
+        <option value="bad">Isteklo ili nedostaje</option>
+        <option value="soon">Ističe u 30 dana</option>
+      </select>
+      <span class="spacer"></span>
+      <button id="btnNewPlayer" class="btn btn-primary">Novi igrač</button>
+    </div>
+    <p class="stats" id="pStats"></p>
+    <div class="panel scroll">
+      <table>
+        <thead><tr>
+          <th>Reg. br.</th><th>Prezime i ime</th><th>Klub</th>
+          <th class="col-opt">Registriran</th><th>Zdravstveno</th><th class="col-opt">Status</th>
+        </tr></thead>
+        <tbody id="pBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- KLUBOVI -->
+  <section id="view-klubovi" class="hidden">
+    <div class="toolbar">
+      <input id="cSearch" type="search" placeholder="Naziv, mjesto ili OIB" aria-label="Pretraži klubove">
+      <span class="spacer"></span>
+      <button id="btnNewClub" class="btn btn-primary">Novi klub</button>
+    </div>
+    <div class="panel scroll">
+      <table>
+        <thead><tr>
+          <th>Naziv</th><th class="col-opt">Puni naziv</th><th>Mjesto</th>
+          <th class="col-opt">Predsjednik</th><th class="num">Igrača</th><th class="col-opt">Članstvo</th>
+        </tr></thead>
+        <tbody id="cBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ALATI -->
+  <section id="view-alati" class="hidden">
+    <div class="panel tool">
+      <h2>Prepisivanje prethodnih klubova u povijest</h2>
+      <p>Za svakog igrača kojem je polje <em>Povijest registracija</em> prazno, upisuje se: popis klubova iz stupca <em>Prethodni klubovi</em> (bez datuma, jer ih stupac nema), zatim trenutna registracija i, ako postoji, prestanak registracije. Usput se popunjava i skriveni stupac <em>Naslov</em> („Prezime Ime“). Igrači s već popunjenom poviješću se preskaču, pa je postupak siguran za ponovno pokretanje.</p>
+      <p id="migInfo"></p>
+      <pre id="migPreview" class="preview hidden"></pre>
+      <button id="btnMigrate" class="btn btn-primary">Pokreni prepisivanje</button>
+      <p id="migProgress" aria-live="polite"></p>
+    </div>
+  </section>
 </main>
 
+<footer id="footer" class="hidden">
+  <a href="#alati">Administracija</a>
+</footer>
+
+<div id="backdrop" class="backdrop hidden"></div>
+<aside id="drawer" class="drawer hidden" role="dialog" aria-modal="true" aria-labelledby="drawerTitle"></aside>
+<div id="toast" class="toast hidden" role="status"></div>
+
+<script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@azure/msal-browser@3.27.0/lib/msal-browser.min.js"></script>
 <script>
-/* ============ KONFIGURACIJA – upišite svoje vrijednosti ============ */
-const CONFIG = {
-  tenantId:    "08ee12ee-23ed-461f-a6bd-d22bbd18980f",
-  clientId:    "f90e3e6b-411d-4dc6-9d66-8b1324c8a65f",
-  redirectUri: "https://admin-curling-hr.github.io/registri/",
-  spHost:      "curlinghr.sharepoint.com",
-  sitePath:    "",
-  lists:       ["Registar igrača", "Registar klubova"]
+"use strict";
+/* ================= Mapa polja (interna imena SharePoint stupaca) ================= */
+const P = {                     // Registar igrača
+  naslov: "Title",
+  broj: "Broj",
+  ime: "IIme",
+  prezime: "Ime",               // da, prikazno "Prezime" ima interno ime "Ime"
+  datumReg: "Datumprveregistracije",   // datum ZADNJE registracije
+  klub: "KlubLookupId",
+  prethodni: "Prethodni_x0020_klubovi",
+  napomena: "Napomena",
+  datumRod: "Datumro_x0111_enja",
+  drzavljanstvo: "Dr_x017e_avljanstvo",
+  prestanak: "Datumprestankaregistracije",
+  zdravstveno: "Datumva_x017e_enjazdravstvenog",
+  povijest: "PovijestRegistracija"
 };
-/* ================================================================== */
+const K = {                     // Registar klubova
+  naslov: "Title",
+  naziv: "Skra_x0107_eninaziv",
+  puniNaziv: "Puninaziv",
+  datumOsnutka: "Datumosnutka",
+  adresa: "Adresa",
+  mjesto: "Mjesto",
+  oib: "OIB",
+  iban: "IBAN",
+  predsjednik: "Predsjednik",
+  mandatDo: "Datumistekamandata",
+  kontakt: "Kontaktosoba",
+  email: "E_x002d_adresa",
+  predstavnici: "Predstavnici",
+  vrsta: "Vrsta_x010d_lanstva",
+  prijem: "Datumprijemau_x010d_lanstvo",
+  prestanak: "Datumprestanka_x010d_lanstva",
+  napomena: "Napomena"
+};
 
+/* Definicije formi */
+const PLAYER_BASIC = [
+  { k: "broj", label: "Registarski broj", type: "text", req: true },
+  { k: "prezime", label: "Prezime", type: "text", req: true },
+  { k: "ime", label: "Ime", type: "text", req: true },
+  { k: "datumRod", label: "Datum rođenja", type: "date" },
+  { k: "drzavljanstvo", label: "Državljanstvo", type: "text" },
+  { k: "zdravstveno", label: "Zdravstveno uvjerenje vrijedi do", type: "date" },
+  { k: "napomena", label: "Napomena", type: "text" }
+];
+const PLAYER_REG = [
+  { k: "klub", label: "Klub", type: "club", req: true },
+  { k: "datumReg", label: "Datum registracije", type: "date", req: true }
+];
+const PLAYER_FIX = [
+  { k: "klub", label: "Klub", type: "club", req: true },
+  { k: "datumReg", label: "Datum registracije", type: "date", req: true },
+  { k: "prestanak", label: "Datum prestanka registracije", type: "date" },
+  { k: "povijest", label: "Povijest registracija", type: "text",
+    help: "Jedan događaj po retku, npr. „15.05.2020. Registracija: Vis“ ili „01.06.2017. Prestanak registracije: Legija“." }
+];
+const CLUB_FORM = [
+  { k: "naziv", label: "Naziv", type: "text", req: true },
+  { k: "puniNaziv", label: "Puni naziv", type: "text" },
+  { k: "oib", label: "OIB", type: "text" },
+  { k: "iban", label: "IBAN", type: "text" },
+  { k: "adresa", label: "Adresa", type: "text" },
+  { k: "mjesto", label: "Mjesto", type: "text" },
+  { k: "datumOsnutka", label: "Datum osnutka", type: "date" },
+  { k: "predsjednik", label: "Predsjednik", type: "text" },
+  { k: "mandatDo", label: "Datum isteka mandata", type: "date" },
+  { k: "kontakt", label: "Kontakt osoba", type: "text" },
+  { k: "email", label: "E-adresa", type: "text" },
+  { k: "predstavnici", label: "Predstavnici", type: "text" },
+  { k: "vrsta", label: "Vrsta članstva", type: "text" },
+  { k: "prijem", label: "Datum prijema u članstvo", type: "date" },
+  { k: "prestanak", label: "Datum prestanka članstva", type: "date" },
+  { k: "napomena", label: "Napomena", type: "text" }
+];
+
+/* ================= Stanje ================= */
+const CFG = window.CONFIG || {};
 const SCOPES = ["User.Read", "Sites.ReadWrite.All"];
 const GRAPH = "https://graph.microsoft.com/v1.0";
-const SKIP_COLS = new Set([
-  "ContentType", "Attachments", "LinkTitle", "LinkTitleNoMenu", "Edit", "DocIcon",
-  "ItemChildCount", "FolderChildCount", "_ComplianceFlags", "_ComplianceTag",
-  "_ComplianceTagWrittenTime", "_ComplianceTagUserId", "_IsRecord", "AppAuthor",
-  "AppEditor", "_UIVersionString", "_ColorTag", "ComplianceAssetId"
-]);
+const S = { siteId: null, lists: {}, cols: {}, players: [], clubs: [], view: "igraci" };
+let msalApp = null, account = null;
 
-const $ = (s) => document.querySelector(s);
-let msalApp = null;
-let account = null;
+/* ================= Pomoćne ================= */
+const $ = (s, root = document) => root.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const coll = new Intl.Collator("hr");
 
 function setStatus(msg, kind = "info") {
   const el = $("#status");
-  el.textContent = msg;
-  el.className = "status " + kind;
+  if (!msg) { el.classList.add("hidden"); return; }
+  el.textContent = msg; el.className = "status " + kind;
 }
-function show(id, on = true) { $(id).classList.toggle("hidden", !on); }
-function esc(s) {
-  return String(s).replace(/[&<>"']/g, (c) =>
-    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+function show(sel, on = true) { $(sel).classList.toggle("hidden", !on); }
+let toastTimer = null;
+function toast(msg) {
+  const t = $("#toast"); t.textContent = msg; t.classList.remove("hidden");
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.add("hidden"), 2600);
 }
 
+/* Datumi: SharePoint "date only" vraća ponoć lokalnog vremena sitea izraženu u UTC-u.
+   +12 h pa UTC datum daje ispravan kalendarski dan neovisno o vremenskoj zoni preglednika. */
+function isoDate(v) {
+  if (!v) return "";
+  const d = new Date(v); if (isNaN(d)) return "";
+  return new Date(d.getTime() + 12 * 3600e3).toISOString().slice(0, 10);
+}
+function hrDate(iso) { if (!iso) return ""; const [y, m, d] = iso.split("-"); return d + "." + m + "." + y + "."; }
+function graphDate(iso) { return iso ? iso + "T12:00:00Z" : null; }
+function todayIso() { const t = new Date(); return t.getFullYear() + "-" + String(t.getMonth() + 1).padStart(2, "0") + "-" + String(t.getDate()).padStart(2, "0"); }
+function addDays(iso, n) { const d = new Date(iso + "T12:00:00Z"); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); }
+
+/* ================= Prijava ================= */
 async function init() {
-  if (typeof msal === "undefined") {
-    setStatus("Knjižnica za prijavu (MSAL) se nije učitala. Provjerite internetsku vezu ili blokator sadržaja.", "error");
-    return;
-  }
-  if (CONFIG.clientId.startsWith("UPISATI") || CONFIG.tenantId.startsWith("UPISATI") || CONFIG.sitePath.includes("UPISATI")) {
-    setStatus("U datoteci index.html, u bloku CONFIG, upišite tenantId, clientId i sitePath.", "error");
-    return;
+  if (typeof msal === "undefined") { setStatus("Knjižnica za prijavu (MSAL) se nije učitala. Provjerite internetsku vezu ili blokator sadržaja.", "error"); return; }
+  if (!CFG.clientId || String(CFG.clientId).startsWith("UPISATI") || String(CFG.tenantId).startsWith("UPISATI")) {
+    setStatus("Datoteka config.js nedostaje ili u njoj nisu upisani tenantId i clientId.", "error"); return;
   }
   msalApp = new msal.PublicClientApplication({
-    auth: {
-      clientId: CONFIG.clientId,
-      authority: "https://login.microsoftonline.com/" + CONFIG.tenantId,
-      redirectUri: CONFIG.redirectUri
-    },
+    auth: { clientId: CFG.clientId, authority: "https://login.microsoftonline.com/" + CFG.tenantId, redirectUri: CFG.redirectUri },
     cache: { cacheLocation: "sessionStorage" }
   });
   await msalApp.initialize();
-
   try {
     const resp = await msalApp.handleRedirectPromise();
     account = resp ? resp.account : (msalApp.getAllAccounts()[0] || null);
-  } catch (e) {
-    setStatus("Prijava nije uspjela:\n" + e.message, "error");
-    show("#signin");
-    return;
-  }
+  } catch (e) { setStatus("Prijava nije uspjela:\n" + e.message, "error"); show("#signin"); return; }
 
-  if (!account) {
-    setStatus("Niste prijavljeni.", "info");
-    show("#signin");
-    return;
-  }
+  if (!account) { setStatus(""); show("#signin"); return; }
   $("#userName").textContent = account.name || account.username;
   show("#btnLogout");
-  await loadData();
+  await loadAll();
 }
 
 async function getToken() {
-  try {
-    const r = await msalApp.acquireTokenSilent({ scopes: SCOPES, account });
-    return r.accessToken;
-  } catch (e) {
-    if (e instanceof msal.InteractionRequiredAuthError) {
-      await msalApp.acquireTokenRedirect({ scopes: SCOPES, account });
-      return null;
-    }
+  try { return (await msalApp.acquireTokenSilent({ scopes: SCOPES, account })).accessToken; }
+  catch (e) {
+    if (e instanceof msal.InteractionRequiredAuthError) { await msalApp.acquireTokenRedirect({ scopes: SCOPES, account }); return null; }
     throw e;
   }
 }
 
-async function graph(pathOrUrl) {
+async function graph(path, opts = {}) {
   const token = await getToken();
   if (!token) throw new Error("Potrebna je ponovna prijava.");
-  const url = pathOrUrl.startsWith("https://") ? pathOrUrl : GRAPH + pathOrUrl;
-  const res = await fetch(url, { headers: { Authorization: "Bearer " + token } });
+  const url = path.startsWith("https://") ? path : GRAPH + path;
+  const headers = { Authorization: "Bearer " + token };
+  if (opts.body !== undefined) headers["Content-Type"] = "application/json";
+  const res = await fetch(url, { method: opts.method || "GET", headers, body: opts.body !== undefined ? JSON.stringify(opts.body) : undefined });
+  if (res.status === 204) return null;
   if (!res.ok) {
     let detail = "";
     try { const j = await res.json(); detail = j.error && j.error.message ? j.error.message : ""; } catch (_) {}
-    throw new Error("Graph " + res.status + " za " + url.replace(GRAPH, "") + (detail ? "\n" + detail : ""));
+    if (res.status === 403) detail = "Nemate dozvolu za ovu radnju na SharePoint listi." + (detail ? "\n" + detail : "");
+    throw new Error(detail || ("Greška " + res.status));
   }
   return res.json();
 }
 
-function colType(c) {
-  for (const t of ["text", "choice", "dateTime", "number", "boolean", "lookup", "personOrGroup", "currency", "calculated"]) {
-    if (c[t]) return t;
-  }
-  return "—";
-}
+/* ================= Učitavanje ================= */
+function itemPath(listKey, id) { return "/sites/" + S.siteId + "/lists/" + S.lists[listKey] + "/items" + (id ? "/" + id : ""); }
 
-function fmt(v, col) {
-  if (v === null || v === undefined || v === "") return "";
-  if (col && col.dateTime && typeof v === "string") {
-    const d = new Date(v);
-    if (!isNaN(d)) return d.toLocaleDateString("hr-HR");
-  }
-  if (Array.isArray(v)) return v.map((x) => (typeof x === "object" ? (x.LookupValue ?? JSON.stringify(x)) : x)).join(", ");
-  if (typeof v === "object") return v.LookupValue ?? v.Email ?? JSON.stringify(v);
-  return String(v);
-}
-
-async function loadData() {
-  try {
-    setStatus("Tražim SharePoint site…");
-    const site = await graph(CONFIG.sitePath
-      ? "/sites/" + CONFIG.spHost + ":" + CONFIG.sitePath
-	  : "/sites/" + CONFIG.spHost);
-    const lists = await graph("/sites/" + site.id + "/lists?$select=id,displayName");
-    const container = $("#lists");
-    container.innerHTML = "";
-    const summary = [];
-
-    for (const name of CONFIG.lists) {
-      const list = lists.value.find((l) => l.displayName === name);
-      if (!list) {
-        throw new Error("Lista „" + name + "“ nije pronađena na siteu „" + (site.displayName || site.name) +
-          "“.\nDostupne liste: " + lists.value.map((l) => l.displayName).join(", "));
-      }
-      setStatus("Čitam „" + name + "“…");
-      const cols = await graph("/sites/" + site.id + "/lists/" + list.id + "/columns");
-      const visibleCols = cols.value.filter((c) => !c.hidden && !c.readOnly && !SKIP_COLS.has(c.name));
-
-      const rows = [];
-      let next = "/sites/" + site.id + "/lists/" + list.id + "/items?$expand=fields&$top=500";
-      while (next) {
-        const page = await graph(next);
-        rows.push(...page.value.map((i) => i.fields));
-        next = page["@odata.nextLink"] || null;
-      }
-      container.appendChild(renderList(list.displayName, visibleCols, rows));
-      summary.push(list.displayName + ": " + rows.length);
-    }
-    setStatus("Veza radi (site „" + (site.displayName || site.name) + "“). " + summary.join(" · "), "ok");
-  } catch (e) {
-    setStatus(e.message, "error");
-  }
-}
-
-function renderList(title, cols, rows) {
-  const sec = document.createElement("section");
-  const head = "<tr>" + cols.map((c) => "<th>" + esc(c.displayName) + "</th>").join("") + "</tr>";
-  sec.innerHTML =
-    "<h2>" + esc(title) + "</h2>" +
-    "<p class='hint'>" + rows.length + " zapisa</p>" +
-    "<h3>Mapa stupaca</h3>" +
-    "<p class='hint'>Prikazno ime i interno ime koje koristi Graph. Ovu tablicu možete poslati za izradu pune aplikacije – ne sadrži osobne podatke.</p>" +
-    "<div class='scroll'><table><thead><tr><th>Prikazno ime</th><th>Interno ime</th><th>Tip</th><th>Obavezno</th></tr></thead><tbody>" +
-    cols.map((c) => "<tr><td>" + esc(c.displayName) + "</td><td><code>" + esc(c.name) + "</code></td><td>" +
-      esc(colType(c)) + "</td><td>" + (c.required ? "da" : "") + "</td></tr>").join("") +
-    "</tbody></table></div>" +
-    "<h3>Zapisi</h3>" +
-    "<input class='search' type='search' placeholder='Pretraži sve stupce' aria-label='Pretraži: " + esc(title) + "'>" +
-    "<div class='scroll'><table><thead>" + head + "</thead><tbody></tbody></table></div>";
-
-  const tbody = sec.querySelectorAll("tbody")[1];
-  const draw = (q) => {
-    const needle = q.trim().toLowerCase();
-    const shown = needle
-      ? rows.filter((r) => cols.some((c) => fmt(r[c.name], c).toLowerCase().includes(needle)))
-      : rows;
-    tbody.innerHTML = shown.map((r) =>
-      "<tr>" + cols.map((c) => "<td>" + esc(fmt(r[c.name], c)) + "</td>").join("") + "</tr>").join("");
+function normItem(it) {
+  return {
+    id: it.id, f: it.fields || {},
+    modified: it.lastModifiedDateTime,
+    modifiedBy: it.lastModifiedBy && it.lastModifiedBy.user ? it.lastModifiedBy.user.displayName : ""
   };
-  sec.querySelector(".search").addEventListener("input", (e) => draw(e.target.value));
-  draw("");
-  return sec;
 }
 
-$("#btnLogin").addEventListener("click", () => msalApp.loginRedirect({ scopes: SCOPES }));
-$("#btnLogout").addEventListener("click", () =>
-  msalApp.logoutRedirect({ account, postLogoutRedirectUri: CONFIG.redirectUri }));
+async function loadList(key) {
+  const out = [];
+  let next = itemPath(key) + "?$expand=fields&$top=500";
+  while (next) {
+    const page = await graph(next);
+    out.push(...page.value.map(normItem));
+    next = page["@odata.nextLink"] || null;
+  }
+  return out;
+}
 
+async function loadAll() {
+  try {
+    setStatus("Učitavam registre…");
+    const site = await graph(CFG.sitePath ? "/sites/" + CFG.spHost + ":" + CFG.sitePath : "/sites/" + CFG.spHost);
+    S.siteId = site.id;
+    const lists = await graph("/sites/" + site.id + "/lists?$select=id,displayName");
+    for (const [key, name] of Object.entries(CFG.lists)) {
+      const l = lists.value.find((x) => x.displayName === name);
+      if (!l) throw new Error("Lista „" + name + "“ nije pronađena. Dostupne liste: " + lists.value.map((x) => x.displayName).join(", "));
+      S.lists[key] = l.id;
+      const cols = await graph("/sites/" + site.id + "/lists/" + l.id + "/columns");
+      S.cols[key] = Object.fromEntries(cols.value.map((c) => [c.name, c]));
+    }
+    checkMapping();
+    [S.players, S.clubs] = await Promise.all([loadList("igraci"), loadList("klubovi")]);
+    setStatus("");
+    show("#nav"); show("#footer");
+    fillClubFilter();
+    route();
+  } catch (e) { setStatus(e.message, "error"); }
+}
+
+function checkMapping() {
+  const miss = [];
+  for (const [k, n] of Object.entries(P)) {
+    const base = n.endsWith("LookupId") ? n.slice(0, -8) : n;
+    if (!S.cols.igraci[base]) miss.push("Registar igrača: " + k + " → " + base);
+  }
+  for (const [k, n] of Object.entries(K)) if (!S.cols.klubovi[n]) miss.push("Registar klubova: " + k + " → " + n);
+  if (miss.length) throw new Error("U listama nedostaju očekivani stupci (provjerite mapu polja u index.html):\n" + miss.join("\n"));
+}
+function isMultiline(listKey, internal) {
+  const c = S.cols[listKey][internal];
+  return !!(c && c.text && c.text.allowMultipleLines);
+}
+
+/* ================= Pristup podacima ================= */
+const pv = (r, k) => r.f[P[k]];
+const cv = (r, k) => r.f[K[k]];
+function clubName(c) { return c ? (cv(c, "naziv") || cv(c, "puniNaziv") || cv(c, "naslov") || "Klub #" + c.id) : ""; }
+function clubById(id) { return S.clubs.find((c) => String(c.id) === String(id)); }
+function playerClubName(p) { const id = pv(p, "klub"); return id ? clubName(clubById(id)) : ""; }
+function isActive(p) { return !pv(p, "prestanak"); }
+function fullName(p) { return [pv(p, "prezime"), pv(p, "ime")].filter(Boolean).join(" "); }
+function sortedClubs() { return [...S.clubs].sort((a, b) => coll.compare(clubName(a), clubName(b))); }
+
+function health(p) {
+  const z = isoDate(pv(p, "zdravstveno")); const t = todayIso();
+  if (!z) return { s: "none", label: "nema podatka", cls: "b-err" };
+  if (z < t) return { s: "expired", label: "isteklo " + hrDate(z), cls: "b-err" };
+  if (z <= addDays(t, 30)) return { s: "soon", label: "do " + hrDate(z), cls: "b-warn" };
+  return { s: "ok", label: "do " + hrDate(z), cls: "b-ok" };
+}
+
+function prethodniNames(p) {
+  const v = p.f[P.prethodni];
+  if (Array.isArray(v)) return v.map((x) => (typeof x === "object" ? (x.LookupValue || clubName(clubById(x.LookupId))) : String(x))).filter(Boolean);
+  const ids = p.f[P.prethodni + "LookupId"];
+  if (Array.isArray(ids)) return ids.map((id) => clubName(clubById(id))).filter(Boolean);
+  return [];
+}
+
+const HIST_RE = /^(\d{1,2})\.(\d{1,2})\.(\d{4})\.?\s+(Registracija|Prestanak registracije)\s*:\s*(.+)$/i;
+function parseHistory(text) {
+  return String(text || "").split(/\r?\n/).map((l) => l.trim()).filter(Boolean).map((l) => {
+    const m = l.match(HIST_RE);
+    if (!m) return { raw: l };
+    return { date: m[1].padStart(2, "0") + "." + m[2].padStart(2, "0") + "." + m[3] + ".", stop: /^prestanak/i.test(m[4]), type: m[4], club: m[5] };
+  });
+}
+function histLine(iso, stop, club) { return hrDate(iso) + " " + (stop ? "Prestanak registracije" : "Registracija") + ": " + club; }
+function appendHist(text, line) { const t = String(text || "").replace(/\s+$/, ""); return t ? t + "\n" + line : line; }
+
+/* ================= Usmjeravanje ================= */
+function route() {
+  const v = (location.hash || "#igraci").slice(1);
+  S.view = ["igraci", "klubovi", "alati"].includes(v) ? v : "igraci";
+  for (const name of ["igraci", "klubovi", "alati"]) show("#view-" + name, name === S.view);
+  document.querySelectorAll("nav a").forEach((a) => a.toggleAttribute("aria-current", a.dataset.view === S.view));
+  document.querySelectorAll("nav a[aria-current]").forEach((a) => a.setAttribute("aria-current", "page"));
+  if (S.view === "igraci") renderPlayers();
+  if (S.view === "klubovi") renderClubs();
+  if (S.view === "alati") renderTools();
+}
+window.addEventListener("hashchange", () => { if (S.siteId) route(); });
+
+/* ================= Igrači: popis ================= */
+function fillClubFilter() {
+  const sel = $("#pClub"); const cur = sel.value;
+  sel.innerHTML = '<option value="">Svi klubovi</option>' + sortedClubs().map((c) => '<option value="' + esc(c.id) + '">' + esc(clubName(c)) + "</option>").join("");
+  sel.value = cur;
+}
+
+function filteredPlayers() {
+  const q = $("#pSearch").value.trim().toLowerCase();
+  const club = $("#pClub").value, st = $("#pStatus").value, h = $("#pHealth").value;
+  return S.players.filter((p) => {
+    if (st === "active" && !isActive(p)) return false;
+    if (st === "inactive" && isActive(p)) return false;
+    if (club && String(pv(p, "klub")) !== club) return false;
+    if (h) { const hs = health(p).s; if (h === "bad" && !(hs === "none" || hs === "expired")) return false; if (h === "soon" && hs !== "soon") return false; }
+    if (q) {
+      const hay = [pv(p, "prezime"), pv(p, "ime"), pv(p, "broj")].join(" ").toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  }).sort((a, b) => coll.compare(pv(a, "prezime") || "", pv(b, "prezime") || "") || coll.compare(pv(a, "ime") || "", pv(b, "ime") || ""));
+}
+
+function renderPlayers() {
+  const rows = filteredPlayers();
+  const active = S.players.filter(isActive);
+  const bad = active.filter((p) => ["none", "expired"].includes(health(p).s)).length;
+  const soon = active.filter((p) => health(p).s === "soon").length;
+  $("#pStats").innerHTML = "<span><b>" + active.length + "</b>registriranih</span><span><b>" + bad +
+    "</b>bez važećeg zdravstvenog</span><span><b>" + soon + "</b>ističe u 30 dana</span><span><b>" + rows.length + "</b>prikazano</span>";
+  if (!rows.length) { $("#pBody").innerHTML = '<tr><td colspan="6" class="empty">Nema igrača za odabrane filtere.</td></tr>'; return; }
+  $("#pBody").innerHTML = rows.map((p) => {
+    const act = isActive(p), h = health(p);
+    return '<tr tabindex="0" data-id="' + esc(p.id) + '"' + (act ? "" : ' class="inactive"') + ">" +
+      '<td class="num">' + esc(pv(p, "broj")) + "</td>" +
+      "<td>" + esc(fullName(p)) + "</td>" +
+      "<td>" + esc(playerClubName(p)) + "</td>" +
+      '<td class="col-opt num">' + esc(hrDate(isoDate(pv(p, "datumReg")))) + "</td>" +
+      "<td>" + (act ? '<span class="badge ' + h.cls + '">' + esc(h.label) + "</span>" : "") + "</td>" +
+      '<td class="col-opt">' + (act ? "registriran" : '<span class="badge b-off">prestanak ' + esc(hrDate(isoDate(pv(p, "prestanak")))) + "</span>") + "</td></tr>";
+  }).join("");
+}
+["#pSearch", "#pClub", "#pStatus", "#pHealth"].forEach((s) => $(s).addEventListener("input", renderPlayers));
+function rowOpen(tbodySel, fn) {
+  const tb = $(tbodySel);
+  tb.addEventListener("click", (e) => { const tr = e.target.closest("tr[data-id]"); if (tr) fn(tr.dataset.id); });
+  tb.addEventListener("keydown", (e) => { if (e.key === "Enter") { const tr = e.target.closest("tr[data-id]"); if (tr) fn(tr.dataset.id); } });
+}
+rowOpen("#pBody", (id) => openPlayer(id));
+rowOpen("#cBody", (id) => openClub(id));
+
+/* ================= Drawer ================= */
+let lastFocus = null;
+function openDrawer(html) {
+  lastFocus = document.activeElement;
+  const d = $("#drawer"); d.innerHTML = html; show("#drawer"); show("#backdrop");
+  const close = d.querySelector(".close"); if (close) close.addEventListener("click", closeDrawer);
+  const first = d.querySelector("input, select, textarea") || close; if (first) first.focus();
+}
+function closeDrawer() { show("#drawer", false); show("#backdrop", false); $("#drawer").innerHTML = ""; if (lastFocus) lastFocus.focus(); }
+$("#backdrop").addEventListener("click", closeDrawer);
+document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("#drawer").classList.contains("hidden")) closeDrawer(); });
+function drawerHead(title, sub) {
+  return '<div class="drawer-head"><div><h2 id="drawerTitle">' + esc(title) + "</h2>" + (sub ? '<div class="sub">' + sub + "</div>" : "") +
+    '</div><button class="btn close" aria-label="Zatvori">×</button></div>';
+}
+function dl(pairs) {
+  return '<dl class="fields">' + pairs.map(([k, v]) => "<dt>" + esc(k) + "</dt><dd>" + (v === "" || v == null ? "–" : v) + "</dd>").join("") + "</dl>";
+}
+function modifiedLine(r) {
+  if (!r.modified) return "";
+  const d = new Date(r.modified);
+  return '<p class="help">Zadnja izmjena: ' + esc(d.toLocaleString("hr-HR", { dateStyle: "short", timeStyle: "short" })) + (r.modifiedBy ? " – " + esc(r.modifiedBy) : "") + "</p>";
+}
+
+/* ================= Igrač: detalji ================= */
+function openPlayer(id) {
+  const p = S.players.find((x) => String(x.id) === String(id)); if (!p) return;
+  const act = isActive(p), h = health(p);
+  const hist = parseHistory(pv(p, "povijest"));
+  const histHtml = hist.length
+    ? '<ul class="timeline">' + hist.map((e) => e.raw
+        ? '<li class="raw">' + esc(e.raw) + "</li>"
+        : "<li" + (e.stop ? ' class="stop"' : "") + "><time>" + esc(e.date) + "</time>" + esc(e.type) + ": " + esc(e.club) + "</li>").join("") + "</ul>"
+    : '<p class="help">Povijest još nije upisana.</p>';
+  const sub = esc("Reg. br. " + (pv(p, "broj") || "–")) + " · " + (act ? esc(playerClubName(p)) : "prestanak registracije " + esc(hrDate(isoDate(pv(p, "prestanak")))));
+  openDrawer(drawerHead(fullName(p), sub) +
+    '<div class="drawer-body">' +
+    "<h3>Registracija</h3>" +
+    dl([
+      ["Klub", esc(playerClubName(p))],
+      ["Datum registracije", esc(hrDate(isoDate(pv(p, "datumReg"))))],
+      ["Prestanak registracije", esc(hrDate(isoDate(pv(p, "prestanak"))))],
+      ["Zdravstveno", act ? '<span class="badge ' + h.cls + '">' + esc(h.label) + "</span>" : esc(hrDate(isoDate(pv(p, "zdravstveno"))))]
+    ]) +
+    "<h3>Osobni podaci</h3>" +
+    dl([
+      ["Registarski broj", esc(pv(p, "broj"))],
+      ["Prezime", esc(pv(p, "prezime"))],
+      ["Ime", esc(pv(p, "ime"))],
+      ["Datum rođenja", esc(hrDate(isoDate(pv(p, "datumRod"))))],
+      ["Državljanstvo", esc(pv(p, "drzavljanstvo"))],
+      ["Napomena", esc(pv(p, "napomena"))]
+    ]) +
+    "<h3>Povijest registracija</h3>" + histHtml + modifiedLine(p) +
+    "</div>" +
+    '<div class="drawer-foot">' +
+    '<button class="btn btn-primary" data-act="reg">' + (act ? "Registracija u klub" : "Ponovna registracija") + "</button>" +
+    (act ? '<button class="btn" data-act="stop">Prestanak registracije</button>' : "") +
+    '<button class="btn" data-act="edit">Uredi podatke</button></div>');
+  const d = $("#drawer");
+  d.querySelector('[data-act="reg"]').addEventListener("click", () => regForm(p));
+  if (act) d.querySelector('[data-act="stop"]').addEventListener("click", () => stopForm(p));
+  d.querySelector('[data-act="edit"]').addEventListener("click", () => playerEditForm(p));
+}
+
+/* ================= Forme: generičko ================= */
+function inputHtml(def, value, listKey, map) {
+  const id = "f_" + def.k;
+  const req = def.req ? " required" : "";
+  let ctl;
+  if (def.type === "date") ctl = '<input type="date" id="' + id + '" name="' + def.k + '" value="' + esc(value) + '"' + req + ">";
+  else if (def.type === "club") ctl = '<select id="' + id + '" name="' + def.k + '"' + req + '><option value="">– odaberite klub –</option>' +
+      sortedClubs().map((c) => '<option value="' + esc(c.id) + '"' + (String(c.id) === String(value) ? " selected" : "") + ">" + esc(clubName(c)) + "</option>").join("") + "</select>";
+  else if (isMultiline(listKey, map[def.k])) ctl = '<textarea id="' + id + '" name="' + def.k + '"' + req + ">" + esc(value) + "</textarea>";
+  else ctl = '<input type="text" id="' + id + '" name="' + def.k + '" value="' + esc(value) + '"' + req + ">";
+  return '<div class="row"><label for="' + id + '">' + esc(def.label) + (def.req ? ' <span class="req" aria-hidden="true">*</span>' : "") +
+    "</label>" + ctl + (def.help ? '<p class="help">' + esc(def.help) + "</p>" : "") + "</div>";
+}
+function currentValues(defs, rec, map) {
+  const o = {};
+  for (const d of defs) {
+    const raw = rec ? rec.f[map[d.k]] : undefined;
+    o[d.k] = d.type === "date" ? isoDate(raw) : (raw == null ? "" : String(raw));
+  }
+  return o;
+}
+function readValues(form, defs) {
+  const o = {};
+  for (const d of defs) { const el = form.elements[d.k]; o[d.k] = el ? el.value.trim() : ""; }
+  return o;
+}
+function validate(defs, vals) {
+  const miss = defs.filter((d) => d.req && !vals[d.k]).map((d) => d.label);
+  return miss.length ? "Obavezna polja: " + miss.join(", ") + "." : "";
+}
+function toGraphFields(defs, vals, map, orig) {
+  const out = {};
+  for (const d of defs) {
+    if (orig && vals[d.k] === orig[d.k]) continue;
+    const v = vals[d.k];
+    if (d.type === "date") out[map[d.k]] = graphDate(v);
+    else if (d.type === "club") out[map[d.k]] = v ? Number(v) : null;
+    else out[map[d.k]] = v;
+  }
+  return out;
+}
+function formErr(form, msg) {
+  let box = form.querySelector(".formerr");
+  if (!msg) { if (box) box.remove(); return; }
+  if (!box) { box = document.createElement("div"); box.className = "formerr"; box.setAttribute("role", "alert"); form.prepend(box); }
+  box.textContent = msg;
+}
+function formDrawer(title, sub, bodyHtml, saveLabel, onSave, onCancel) {
+  openDrawer(drawerHead(title, sub) +
+    '<form class="drawer-body" id="theForm" novalidate>' + bodyHtml + "</form>" +
+    '<div class="drawer-foot"><button class="btn btn-primary" id="btnSave">' + esc(saveLabel) + '</button><button class="btn" id="btnCancel">Odustani</button></div>');
+  const form = $("#theForm"), btn = $("#btnSave");
+  const go = async () => {
+    formErr(form, "");
+    btn.disabled = true; btn.textContent = "Spremam…";
+    try { await onSave(form); }
+    catch (e) { formErr(form, e.message); }
+    finally { if (document.body.contains(btn)) { btn.disabled = false; btn.textContent = saveLabel; } }
+  };
+  btn.addEventListener("click", go);
+  form.addEventListener("submit", (e) => { e.preventDefault(); go(); });
+  $("#btnCancel").addEventListener("click", onCancel || closeDrawer);
+}
+
+async function refreshItem(listKey, id) {
+  const it = normItem(await graph(itemPath(listKey, id) + "?$expand=fields"));
+  const arr = listKey === "igraci" ? S.players : S.clubs;
+  const i = arr.findIndex((x) => String(x.id) === String(id));
+  if (i >= 0) arr[i] = it; else arr.push(it);
+  return it;
+}
+async function patchItem(listKey, id, fields) {
+  await graph(itemPath(listKey, id) + "/fields", { method: "PATCH", body: fields });
+  return refreshItem(listKey, id);
+}
+async function createItem(listKey, fields) {
+  const created = await graph(itemPath(listKey), { method: "POST", body: { fields } });
+  return refreshItem(listKey, created.id);
+}
+function afterSave(msg) { toast(msg); route(); }
+
+/* ================= Igrač: akcije ================= */
+function dupBroj(broj, exceptId) {
+  const b = String(broj).trim().toLowerCase();
+  return S.players.find((p) => String(pv(p, "broj") || "").trim().toLowerCase() === b && String(p.id) !== String(exceptId));
+}
+
+function regForm(p) {
+  const act = isActive(p);
+  const defs = [{ k: "klub", label: "Klub", type: "club", req: true }, { k: "datumReg", label: "Datum registracije", type: "date", req: true }];
+  formDrawer(act ? "Registracija u klub" : "Ponovna registracija", esc(fullName(p)),
+    inputHtml(defs[0], act ? pv(p, "klub") : "", "igraci", P) + inputHtml(defs[1], todayIso(), "igraci", P) +
+    '<p class="help">Klub i datum registracije igrača postaju novo trenutno stanje' + (act ? "" : ", prestanak registracije se briše") + ", a u povijest se dodaje redak o registraciji.</p>",
+    "Registriraj",
+    async (form) => {
+      const v = readValues(form, defs); const err = validate(defs, v); if (err) throw new Error(err);
+      const club = clubName(clubById(v.klub));
+      const fields = {
+        [P.klub]: Number(v.klub),
+        [P.datumReg]: graphDate(v.datumReg),
+        [P.povijest]: appendHist(pv(p, "povijest"), histLine(v.datumReg, false, club)),
+        [P.naslov]: fullName(p)
+      };
+      if (!act) fields[P.prestanak] = null;
+      const np = await patchItem("igraci", p.id, fields);
+      afterSave("Registracija upisana."); openPlayer(np.id);
+    },
+    () => openPlayer(p.id));
+}
+
+function stopForm(p) {
+  const def = { k: "prestanak", label: "Datum prestanka registracije", type: "date", req: true };
+  formDrawer("Prestanak registracije", esc(fullName(p) + " · " + playerClubName(p)),
+    inputHtml(def, todayIso(), "igraci", P) +
+    '<p class="help">Igrač ostaje u registru, a u povijest se dodaje redak o prestanku registracije.</p>',
+    "Upiši prestanak",
+    async (form) => {
+      const v = readValues(form, [def]); if (!v.prestanak) throw new Error("Upišite datum prestanka.");
+      const reg = isoDate(pv(p, "datumReg"));
+      if (reg && v.prestanak < reg) throw new Error("Datum prestanka ne može biti prije datuma registracije (" + hrDate(reg) + ").");
+      const np = await patchItem("igraci", p.id, {
+        [P.prestanak]: graphDate(v.prestanak),
+        [P.povijest]: appendHist(pv(p, "povijest"), histLine(v.prestanak, true, playerClubName(p))),
+        [P.naslov]: fullName(p)
+      });
+      afterSave("Prestanak registracije upisan."); openPlayer(np.id);
+    },
+    () => openPlayer(p.id));
+}
+
+function playerEditForm(p) {
+  const all = [...PLAYER_BASIC, ...PLAYER_FIX];
+  const orig = currentValues(all, p, P);
+  formDrawer("Uredi podatke", esc(fullName(p)),
+    PLAYER_BASIC.map((d) => inputHtml(d, orig[d.k], "igraci", P)).join("") +
+    "<details><summary>Ispravak registracije i povijesti</summary>" +
+    '<p class="help">Samo za ispravak pogrešno upisanih podataka. Ove izmjene ne dodaju ništa u povijest; za stvarnu registraciju ili prestanak koristite gumbe na kartici igrača.</p>' +
+    PLAYER_FIX.map((d) => inputHtml(d, orig[d.k], "igraci", P)).join("") + "</details>",
+    "Spremi",
+    async (form) => {
+      const v = readValues(form, all); const err = validate(all, v); if (err) throw new Error(err);
+      if (dupBroj(v.broj, p.id)) throw new Error("Registarski broj " + v.broj + " već ima drugi igrač.");
+      if (v.prestanak && v.datumReg && v.prestanak < v.datumReg) throw new Error("Datum prestanka ne može biti prije datuma registracije.");
+      const fields = toGraphFields(all, v, P, orig);
+      if (!Object.keys(fields).length) { toast("Nema promjena."); openPlayer(p.id); return; }
+      fields[P.naslov] = v.prezime + " " + v.ime;
+      const np = await patchItem("igraci", p.id, fields);
+      afterSave("Spremljeno."); openPlayer(np.id);
+    },
+    () => openPlayer(p.id));
+}
+
+function newPlayerForm() {
+  const defs = [...PLAYER_BASIC.slice(0, 3), ...PLAYER_REG, ...PLAYER_BASIC.slice(3)];
+  const vals = { broj: "", prezime: "", ime: "", klub: "", datumReg: todayIso(), datumRod: "", drzavljanstvo: "Hrvatska", zdravstveno: "", napomena: "" };
+  formDrawer("Novi igrač", "", defs.map((d) => inputHtml(d, vals[d.k], "igraci", P)).join(""), "Spremi igrača",
+    async (form) => {
+      const v = readValues(form, defs); const err = validate(defs, v); if (err) throw new Error(err);
+      if (dupBroj(v.broj)) throw new Error("Registarski broj " + v.broj + " već postoji.");
+      const fields = toGraphFields(defs, v, P);
+      for (const k of Object.keys(fields)) if (fields[k] === null || fields[k] === "") delete fields[k];
+      fields[P.naslov] = v.prezime + " " + v.ime;
+      fields[P.povijest] = histLine(v.datumReg, false, clubName(clubById(v.klub)));
+      const np = await createItem("igraci", fields);
+      afterSave("Igrač je upisan u registar."); openPlayer(np.id);
+    });
+}
+$("#btnNewPlayer").addEventListener("click", newPlayerForm);
+
+/* ================= Klubovi ================= */
+function clubPlayers(c, onlyActive = true) {
+  return S.players.filter((p) => String(pv(p, "klub")) === String(c.id) && (!onlyActive || isActive(p)));
+}
+function renderClubs() {
+  const q = $("#cSearch").value.trim().toLowerCase();
+  const rows = sortedClubs().filter((c) => !q || [clubName(c), cv(c, "puniNaziv"), cv(c, "mjesto"), cv(c, "oib")].join(" ").toLowerCase().includes(q));
+  if (!rows.length) { $("#cBody").innerHTML = '<tr><td colspan="6" class="empty">Nema klubova za ovu pretragu.</td></tr>'; return; }
+  $("#cBody").innerHTML = rows.map((c) => {
+    const end = isoDate(cv(c, "prestanak"));
+    return '<tr tabindex="0" data-id="' + esc(c.id) + '"' + (end ? ' class="inactive"' : "") + ">" +
+      "<td>" + esc(clubName(c)) + "</td>" +
+      '<td class="col-opt">' + esc(cv(c, "puniNaziv")) + "</td>" +
+      "<td>" + esc(cv(c, "mjesto")) + "</td>" +
+      '<td class="col-opt">' + esc(cv(c, "predsjednik")) + "</td>" +
+      '<td class="num">' + clubPlayers(c).length + "</td>" +
+      '<td class="col-opt">' + (end ? '<span class="badge b-off">prestanak ' + esc(hrDate(end)) + "</span>" : esc(cv(c, "vrsta"))) + "</td></tr>";
+  }).join("");
+}
+$("#cSearch").addEventListener("input", renderClubs);
+
+function openClub(id) {
+  const c = clubById(id); if (!c) return;
+  const pl = clubPlayers(c).sort((a, b) => coll.compare(fullName(a), fullName(b)));
+  const d = (k) => esc(hrDate(isoDate(cv(c, k))));
+  const email = cv(c, "email");
+  openDrawer(drawerHead(clubName(c), esc(cv(c, "puniNaziv") || "")) +
+    '<div class="drawer-body">' +
+    dl([
+      ["Puni naziv", esc(cv(c, "puniNaziv"))], ["OIB", esc(cv(c, "oib"))], ["IBAN", esc(cv(c, "iban"))],
+      ["Adresa", esc(cv(c, "adresa"))], ["Mjesto", esc(cv(c, "mjesto"))], ["Datum osnutka", d("datumOsnutka")],
+      ["Predsjednik", esc(cv(c, "predsjednik"))], ["Mandat do", d("mandatDo")],
+      ["Kontakt osoba", esc(cv(c, "kontakt"))], ["E-adresa", email ? '<a href="mailto:' + esc(email) + '">' + esc(email) + "</a>" : ""],
+      ["Predstavnici", esc(cv(c, "predstavnici"))], ["Vrsta članstva", esc(cv(c, "vrsta"))],
+      ["Prijem u članstvo", d("prijem")], ["Prestanak članstva", d("prestanak")], ["Napomena", esc(cv(c, "napomena"))]
+    ]) +
+    "<h3>Registrirani igrači (" + pl.length + ")</h3>" +
+    (pl.length ? '<ul class="timeline">' + pl.map((p) => '<li><button class="link" data-pid="' + esc(p.id) + '">' + esc(fullName(p)) + "</button> <span class=\"help\">reg. br. " + esc(pv(p, "broj")) + "</span></li>").join("") + "</ul>"
+      : '<p class="help">Klub trenutno nema registriranih igrača.</p>') +
+    modifiedLine(c) + "</div>" +
+    '<div class="drawer-foot"><button class="btn btn-primary" data-act="edit">Uredi podatke</button></div>');
+  const dr = $("#drawer");
+  dr.querySelector('[data-act="edit"]').addEventListener("click", () => clubForm(c));
+  dr.querySelectorAll("[data-pid]").forEach((b) => b.addEventListener("click", () => { location.hash = "#igraci"; openPlayer(b.dataset.pid); }));
+}
+
+function clubForm(c) {
+  const orig = c ? currentValues(CLUB_FORM, c, K) : Object.fromEntries(CLUB_FORM.map((d) => [d.k, ""]));
+  formDrawer(c ? "Uredi klub" : "Novi klub", c ? esc(clubName(c)) : "",
+    CLUB_FORM.map((d) => inputHtml(d, orig[d.k], "klubovi", K)).join(""), "Spremi",
+    async (form) => {
+      const v = readValues(form, CLUB_FORM); const err = validate(CLUB_FORM, v); if (err) throw new Error(err);
+      const fields = toGraphFields(CLUB_FORM, v, K, c ? orig : null);
+      if (c && !Object.keys(fields).length) { toast("Nema promjena."); openClub(c.id); return; }
+      if (!c) for (const k of Object.keys(fields)) if (fields[k] === null || fields[k] === "") delete fields[k];
+      fields[K.naslov] = v.naziv;
+      const nc = c ? await patchItem("klubovi", c.id, fields) : await createItem("klubovi", fields);
+      fillClubFilter(); afterSave(c ? "Spremljeno." : "Klub je upisan."); openClub(nc.id);
+    },
+    c ? () => openClub(c.id) : closeDrawer);
+}
+$("#btnNewClub").addEventListener("click", () => clubForm(null));
+
+/* ================= Alati: jednokratno prepisivanje ================= */
+function migrationText(p) {
+  const lines = prethodniNames(p).map((n) => "Prethodni klub: " + n);
+  const club = playerClubName(p), reg = isoDate(pv(p, "datumReg")), end = isoDate(pv(p, "prestanak"));
+  if (club && reg) lines.push(histLine(reg, false, club));
+  if (club && end) lines.push(histLine(end, true, club));
+  return lines.join("\n");
+}
+function migrationCandidates() {
+  return S.players.filter((p) => !String(pv(p, "povijest") || "").trim()).map((p) => ({ p, text: migrationText(p) })).filter((x) => x.text);
+}
+function renderTools() {
+  const c = migrationCandidates();
+  $("#migInfo").textContent = c.length ? "Igrača za prepisivanje: " + c.length + ". Primjer za prva tri:" : "Nema igrača s praznom poviješću – prepisivanje nije potrebno.";
+  const pre = $("#migPreview");
+  pre.textContent = c.slice(0, 3).map((x) => fullName(x.p) + "\n" + x.text).join("\n\n");
+  show("#migPreview", c.length > 0);
+  $("#btnMigrate").disabled = !c.length;
+}
+$("#btnMigrate").addEventListener("click", async () => {
+  const c = migrationCandidates();
+  if (!c.length || !confirm("Upisati povijest za " + c.length + " igrača?")) return;
+  const btn = $("#btnMigrate"), prog = $("#migProgress");
+  btn.disabled = true;
+  let ok = 0; const fails = [];
+  for (const [i, x] of c.entries()) {
+    prog.textContent = "Upisujem " + (i + 1) + " / " + c.length + "…";
+    try {
+      await graph(itemPath("igraci", x.p.id) + "/fields", { method: "PATCH", body: { [P.povijest]: x.text, [P.naslov]: fullName(x.p) } });
+      x.p.f[P.povijest] = x.text; x.p.f[P.naslov] = fullName(x.p); ok++;
+    } catch (e) { fails.push(fullName(x.p) + ": " + e.message); }
+  }
+  prog.textContent = "Gotovo: upisano " + ok + (fails.length ? ", neuspjelo " + fails.length + ":\n" + fails.join("\n") : ".");
+  renderTools();
+});
+
+/* ================= Pokretanje ================= */
+$("#btnLogin").addEventListener("click", () => msalApp.loginRedirect({ scopes: SCOPES }));
+$("#btnLogout").addEventListener("click", () => msalApp.logoutRedirect({ account, postLogoutRedirectUri: CFG.redirectUri }));
 init();
 </script>
 </body>
