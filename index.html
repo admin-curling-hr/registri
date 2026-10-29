@@ -3,178 +3,216 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Registri HCS</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Semi+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<meta name="robots" content="noindex, nofollow">
+<title>Registri — Hrvatski curling savez</title>
+<link rel="icon" href="https://curling.hr/assets/images/hcs-logo.png">
 <style>
+*, *::before, *::after { box-sizing: border-box; }
+:root {
+  --red: #CC0000; --red-dark: #990000;
+  --bg: #f5f5f5; --surface: #ffffff; --text: #1a1a1a; --muted: #555555; --border: #dddddd;
+  --link: #990000; --hover: #fafafa;
+  --shadow: 0 1px 4px rgba(0,0,0,0.10);
+  --ok-bg: #eaf6ec; --ok: #1d6b2f;
+  --warn-bg: #fff4d6; --warn: #7a5200;
+  --err-bg: #fdecee; --err: #b00020;
+  --off-bg: #eeeeee; --off: #666666;
+  --shade: rgba(0,0,0,.35);
+  --radius: 6px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
   :root {
-    --ice: #EEF4F8; --surface: #FFFFFF; --ink: #1A2530; --muted: #5B6B78; --line: #D3DEE6;
-    --navy: #12304A; --red: #C8102E; --blue: #1F5FA8;
-    --ok-bg: #E6F2EA; --ok-ink: #1D5E33;
-    --warn-bg: #FFF3D6; --warn-ink: #7A5200;
-    --err-bg: #FBE9EB; --err-ink: #8A1023;
-    --info-bg: #E7EFF8; --info-ink: #1F4E86;
-    --shade: rgba(18, 48, 74, .35);
-    color-scheme: light;
+    --bg: #121212; --surface: #1e1e1e; --text: #e8e8e8; --muted: #999999; --border: #333333;
+    --link: #e06060; --hover: #262626;
+    --shadow: 0 1px 4px rgba(0,0,0,0.40);
+    --ok-bg: #173323; --ok: #9ed8b2;
+    --warn-bg: #3a2e10; --warn: #f0cf7a;
+    --err-bg: #3a1820; --err: #f2a7b3;
+    --off-bg: #2a2a2a; --off: #aaaaaa;
+    --shade: rgba(0,0,0,.6);
+    color-scheme: dark;
   }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --ice: #0F1A23; --surface: #16232E; --ink: #E4ECF2; --muted: #9AACBA; --line: #2A3B49;
-      --navy: #0B1620; --red: #E0475E; --blue: #5C95D6;
-      --ok-bg: #173323; --ok-ink: #9ED8B2;
-      --warn-bg: #3A2E10; --warn-ink: #F0CF7A;
-      --err-bg: #3A1820; --err-ink: #F2A7B3;
-      --info-bg: #172B40; --info-ink: #A9C9EE;
-      --shade: rgba(0, 0, 0, .55);
-      color-scheme: dark;
-    }
-  }
-  * { box-sizing: border-box; }
-  body { margin: 0; background: var(--ice); color: var(--ink);
-    font: 16px/1.5 "Barlow", system-ui, -apple-system, "Segoe UI", sans-serif; }
-  button, input, select, textarea { font: inherit; color: inherit; }
-  button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible,
-  a:focus-visible, tr:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+}
+body { margin: 0; background: var(--bg); color: var(--text); line-height: 1.45;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; min-height: 100vh; }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--link); outline-offset: 2px; }
+.hidden { display: none !important; }
 
-  header { background: var(--navy); color: #fff; padding: 14px 24px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
-  .house { width: 40px; height: 40px; border-radius: 50%; flex: none;
-    background: radial-gradient(circle, #fff 0 14%, var(--red) 14% 38%, #fff 38% 58%, var(--blue) 58% 100%);
-    box-shadow: 0 0 0 2px rgba(255,255,255,.25); }
-  h1, h2, h3 { font-family: "Barlow Semi Condensed", "Barlow", sans-serif; line-height: 1.15; }
-  h1 { font-size: 1.5rem; margin: 0; }
-  nav { display: flex; gap: 4px; margin-left: 12px; }
-  nav a { color: rgba(255,255,255,.75); text-decoration: none; padding: 6px 14px; border-radius: 6px; font-weight: 600; }
-  nav a[aria-current="page"] { color: #fff; background: rgba(255,255,255,.14); }
-  .who { margin-left: auto; display: flex; align-items: center; gap: 12px; font-size: .95rem; }
+/* ---- Header kao na curling.hr ---- */
+.app-header { background: var(--red); color: #fff; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.25); }
+.app-header-inner { max-width: 1240px; margin: 0 auto; padding: 0.75rem 1rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.header-brand { display: flex; align-items: center; gap: 0.85rem; min-width: 0; }
+.header-brand img { width: 62px; height: 62px; border-radius: 50%; flex-shrink: 0; }
+.header-titles { display: flex; flex-direction: column; min-width: 0; }
+.app-header h1 { font-size: 1.2rem; font-weight: 700; letter-spacing: 0.01em; line-height: 1.2; margin: 0; }
+.app-header p { font-size: 0.78rem; opacity: 0.85; margin: 0; }
+.header-actions { display: flex; align-items: center; gap: 0.6rem; flex-shrink: 0; }
+.home-btn, .hdr-btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.4rem 0.75rem; border-radius: var(--radius);
+  background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.4); color: #fff; text-decoration: none;
+  font-size: 0.8rem; font-weight: 600; white-space: nowrap; cursor: pointer; transition: background 0.15s; }
+.home-btn:hover, .hdr-btn:hover { background: rgba(255,255,255,0.3); }
+.hdr-btn svg { width: 18px; height: 18px; }
+.user-name { font-size: 0.85rem; font-weight: 600; max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (max-width: 600px) {
+  .header-brand img { width: 46px; height: 46px; }
+  .app-header h1 { font-size: 1rem; }
+  .user-name { display: none; }
+}
 
-  .btn { cursor: pointer; border-radius: 6px; padding: 8px 16px; border: 1px solid var(--line); background: var(--surface); font-weight: 600; }
-  .btn-primary { background: var(--red); color: #fff; border-color: var(--red); }
-  .btn-header { background: transparent; color: #fff; border-color: rgba(255,255,255,.45); }
-  .btn:disabled { opacity: .55; cursor: default; }
-  .link { background: none; border: 0; color: var(--blue); cursor: pointer; padding: 0; font-weight: 600; }
+/* ---- Sadržaj ---- */
+main { max-width: 1240px; margin: 0 auto; padding: 1.25rem 1rem 2rem; }
+.status { padding: 12px 16px; border-radius: var(--radius); margin-bottom: 16px; white-space: pre-wrap; }
+.status.info { background: var(--surface); border: 1px solid var(--border); color: var(--muted); }
+.status.error { background: var(--err-bg); color: var(--err); }
 
-  main { max-width: 1240px; margin: 0 auto; padding: 24px; }
-  .status { padding: 12px 16px; border-radius: 6px; margin-bottom: 20px; white-space: pre-wrap; }
-  .status.info { background: var(--info-bg); color: var(--info-ink); }
-  .status.error { background: var(--err-bg); color: var(--err-ink); }
-  .hidden { display: none !important; }
+.tabs { display: inline-flex; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 3px; margin-bottom: 16px; box-shadow: var(--shadow); }
+.tabs a { padding: 0.45rem 1.1rem; border-radius: 6px; text-decoration: none; color: var(--text); font-weight: 600; }
+.tabs a:hover { background: var(--hover); }
+.tabs a[aria-current="page"] { background: var(--red); color: #fff; }
 
-  .toolbar { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; }
-  .toolbar input[type=search] { flex: 1 1 240px; max-width: 360px; }
-  .toolbar .spacer { flex: 1; }
-  input[type=search], input[type=text], input[type=date], input[type=email], select, textarea {
-    padding: 8px 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; width: 100%; }
-  .toolbar select { width: auto; }
-  textarea { min-height: 90px; resize: vertical; }
+.btn { cursor: pointer; border-radius: var(--radius); padding: 0.45rem 1rem; border: 1px solid var(--border); background: var(--surface); font-weight: 600; }
+.btn:hover { background: var(--hover); }
+.btn-primary { background: var(--red); border-color: var(--red); color: #fff; }
+.btn-primary:hover { background: var(--red-dark); }
+.btn:disabled { opacity: .55; cursor: default; }
+.link { background: none; border: 0; color: var(--link); cursor: pointer; padding: 0; font-weight: 600; text-align: left; }
 
-  .stats { display: flex; gap: 24px; flex-wrap: wrap; margin: 0 0 16px; color: var(--muted); }
-  .stats b { color: var(--ink); font-size: 1.15rem; margin-right: 4px; }
+.toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
+.toolbar input[type=search] { flex: 1 1 240px; max-width: 340px; }
+.toolbar .spacer { flex: 1; }
+input[type=search], input[type=text], input[type=date], select, textarea {
+  padding: 0.45rem 0.6rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); width: 100%; }
+.toolbar select { width: auto; }
+textarea { min-height: 90px; resize: vertical; }
 
-  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; }
-  .scroll { overflow-x: auto; }
-  table { border-collapse: collapse; width: 100%; font-size: .95rem; }
-  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: middle; }
-  th { font-weight: 600; color: var(--muted); white-space: nowrap; }
-  tbody tr { cursor: pointer; }
-  tbody tr:hover { background: var(--ice); }
-  tbody tr:last-child td { border-bottom: 0; }
-  tr.inactive td { color: var(--muted); }
-  .num { font-variant-numeric: tabular-nums; }
-  .empty { padding: 32px; text-align: center; color: var(--muted); }
+.stats { display: flex; gap: 22px; flex-wrap: wrap; margin: 0 0 12px; color: var(--muted); font-size: .95rem; }
+.stats b { color: var(--text); font-size: 1.1rem; margin-right: 4px; }
 
-  .badge { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: .85rem; font-weight: 600; white-space: nowrap; }
-  .b-ok { background: var(--ok-bg); color: var(--ok-ink); }
-  .b-warn { background: var(--warn-bg); color: var(--warn-ink); }
-  .b-err { background: var(--err-bg); color: var(--err-ink); }
-  .b-off { background: var(--ice); color: var(--muted); }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; box-shadow: var(--shadow); }
+.scroll { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+th { padding: 0; white-space: nowrap; }
+th button { all: unset; box-sizing: border-box; display: flex; align-items: center; gap: 4px; width: 100%; padding: 9px 12px; cursor: pointer; font-weight: 600; color: var(--muted); }
+th button:hover { color: var(--text); }
+th button:focus-visible { outline: 3px solid var(--link); outline-offset: -3px; }
+th[aria-sort] button { color: var(--text); }
+th .arrow { font-size: .75em; opacity: .8; }
+tbody tr { cursor: pointer; }
+tbody tr:hover { background: var(--hover); }
+tbody tr:last-child td { border-bottom: 0; }
+tr.inactive td { color: var(--muted); }
+.num { font-variant-numeric: tabular-nums; }
+.empty { padding: 32px; text-align: center; color: var(--muted); cursor: default; }
 
-  .backdrop { position: fixed; inset: 0; background: var(--shade); z-index: 20; }
-  .drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(580px, 100%); background: var(--surface);
-    z-index: 21; display: flex; flex-direction: column; box-shadow: -8px 0 24px rgba(0,0,0,.18); }
-  .drawer-head { display: flex; align-items: flex-start; gap: 12px; padding: 20px 24px 12px; border-bottom: 1px solid var(--line); }
-  .drawer-head h2 { margin: 0; font-size: 1.45rem; }
-  .drawer-head .sub { color: var(--muted); font-size: .95rem; }
-  .drawer-head .close { margin-left: auto; font-size: 1.4rem; line-height: 1; padding: 4px 10px; }
-  .drawer-body { padding: 20px 24px; overflow-y: auto; flex: 1; }
-  .drawer-foot { padding: 14px 24px; border-top: 1px solid var(--line); display: flex; gap: 10px; flex-wrap: wrap; }
+.badge { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: .82rem; font-weight: 600; white-space: nowrap; }
+.b-ok { background: var(--ok-bg); color: var(--ok); }
+.b-warn { background: var(--warn-bg); color: var(--warn); }
+.b-err { background: var(--err-bg); color: var(--err); }
+.b-off { background: var(--off-bg); color: var(--off); }
 
-  dl.fields { display: grid; grid-template-columns: minmax(150px, 40%) 1fr; gap: 8px 16px; margin: 0 0 20px; }
-  dl.fields dt { color: var(--muted); }
-  dl.fields dd { margin: 0; overflow-wrap: anywhere; white-space: pre-wrap; }
-  h3 { font-size: 1.1rem; margin: 24px 0 10px; }
+.notice { padding: 28px; text-align: center; color: var(--muted); }
+.notice h2 { color: var(--text); font-size: 1.15rem; margin: 0 0 8px; }
+.signin { text-align: center; padding: 48px 20px; }
+.signin h2 { margin: 0 0 8px; font-size: 1.3rem; }
+.signin p { color: var(--muted); max-width: 46ch; margin: 0 auto 20px; }
 
-  .timeline { list-style: none; margin: 0; padding: 0 0 0 18px; border-left: 2px solid var(--line); }
-  .timeline li { position: relative; padding: 0 0 12px 8px; }
-  .timeline li::before { content: ""; position: absolute; left: -25px; top: 7px; width: 10px; height: 10px; border-radius: 50%; background: var(--blue); border: 2px solid var(--surface); }
-  .timeline li.stop::before { background: var(--muted); }
-  .timeline li.raw { color: var(--muted); }
-  .timeline time { font-weight: 600; margin-right: 6px; font-variant-numeric: tabular-nums; }
+/* ---- Bočni panel ---- */
+.backdrop { position: fixed; inset: 0; background: var(--shade); z-index: 200; }
+.drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(580px, 100%); background: var(--surface); z-index: 201;
+  display: flex; flex-direction: column; box-shadow: -8px 0 24px rgba(0,0,0,.25); }
+.drawer-head { display: flex; align-items: flex-start; gap: 12px; padding: 18px 22px 12px; border-bottom: 3px solid var(--red); }
+.drawer-head h2 { margin: 0; font-size: 1.35rem; }
+.drawer-head .sub { color: var(--muted); font-size: .92rem; }
+.drawer-head .close { margin-left: auto; font-size: 1.3rem; line-height: 1; padding: 4px 10px; }
+.drawer-body { padding: 18px 22px; overflow-y: auto; flex: 1; }
+.drawer-foot { padding: 12px 22px; border-top: 1px solid var(--border); display: flex; gap: 10px; flex-wrap: wrap; }
+dl.fields { display: grid; grid-template-columns: minmax(150px, 40%) 1fr; gap: 7px 16px; margin: 0 0 18px; }
+dl.fields dt { color: var(--muted); }
+dl.fields dd { margin: 0; overflow-wrap: anywhere; white-space: pre-wrap; }
+.drawer h3 { font-size: 1.02rem; margin: 20px 0 8px; color: var(--link); }
+.timeline { list-style: none; margin: 0; padding: 0 0 0 16px; border-left: 2px solid var(--border); }
+.timeline li { position: relative; padding: 0 0 10px 8px; }
+.timeline li::before { content: ""; position: absolute; left: -23px; top: 7px; width: 10px; height: 10px; border-radius: 50%; background: var(--red); border: 2px solid var(--surface); }
+.timeline li.stop::before { background: var(--muted); }
+.timeline li.raw { color: var(--muted); }
+.timeline li.raw::before { background: var(--border); }
+.timeline time { font-weight: 600; margin-right: 6px; font-variant-numeric: tabular-nums; }
+form .row { margin-bottom: 13px; }
+form label { display: block; font-weight: 600; margin-bottom: 4px; }
+form label .req { color: var(--red); }
+.help { color: var(--muted); font-size: .88rem; margin: 4px 0 0; }
+details { border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 14px; margin-top: 8px; }
+details summary { cursor: pointer; font-weight: 600; }
+.formerr { background: var(--err-bg); color: var(--err); padding: 10px 12px; border-radius: var(--radius); margin-bottom: 14px; white-space: pre-wrap; }
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); background: #1a1a1a; color: #fff;
+  padding: 10px 18px; border-radius: var(--radius); z-index: 300; box-shadow: 0 4px 16px rgba(0,0,0,.3); }
 
-  form .row { margin-bottom: 14px; }
-  form label { display: block; font-weight: 600; margin-bottom: 4px; }
-  form label .req { color: var(--red); }
-  form .help { color: var(--muted); font-size: .9rem; margin: 4px 0 0; }
-  details { border: 1px solid var(--line); border-radius: 6px; padding: 10px 14px; margin-top: 8px; }
-  details summary { cursor: pointer; font-weight: 600; }
-  .formerr { background: var(--err-bg); color: var(--err-ink); padding: 10px 12px; border-radius: 6px; margin-bottom: 14px; white-space: pre-wrap; }
+footer { max-width: 1240px; margin: 0 auto; padding: 0 1rem 2rem; font-size: .88rem; }
+footer a { color: var(--muted); }
+.tool { padding: 20px; margin-bottom: 18px; }
+.tool h2 { margin: 0 0 8px; font-size: 1.15rem; }
+.tool h3 { margin: 16px 0 6px; font-size: 1rem; }
+pre.preview { background: var(--bg); padding: 12px; border-radius: var(--radius); white-space: pre-wrap; font-size: .88rem; }
+code { font-family: Consolas, 'Courier New', monospace; font-size: .9em; }
 
-  .toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); background: var(--navy); color: #fff;
-    padding: 10px 18px; border-radius: 6px; z-index: 30; box-shadow: 0 4px 16px rgba(0,0,0,.25); }
-
-  .signin { text-align: center; padding: 48px 20px; }
-  .signin p { color: var(--muted); max-width: 46ch; margin: 0 auto 20px; }
-  footer { max-width: 1240px; margin: 0 auto; padding: 8px 24px 32px; color: var(--muted); font-size: .9rem; }
-  footer a { color: var(--muted); }
-  .tool { padding: 20px; margin-bottom: 20px; }
-  .tool h2 { margin: 0 0 8px; }
-  pre.preview { background: var(--ice); padding: 12px; border-radius: 6px; white-space: pre-wrap; font-size: .9rem; }
-
-  @media (max-width: 760px) {
-    .col-opt { display: none; }
-    header { padding: 12px 16px; }
-    nav { margin-left: 0; order: 3; width: 100%; }
-    main { padding: 16px; }
-    dl.fields { grid-template-columns: 1fr; gap: 0 0; }
-    dl.fields dd { margin-bottom: 10px; }
-  }
-  @media (prefers-reduced-motion: no-preference) {
-    .drawer { animation: slidein .18s ease-out; }
-    @keyframes slidein { from { transform: translateX(24px); opacity: .6; } to { transform: none; opacity: 1; } }
-  }
+@media (max-width: 760px) {
+  .col-opt { display: none; }
+  dl.fields { grid-template-columns: 1fr; gap: 0; }
+  dl.fields dd { margin-bottom: 9px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .drawer { animation: slidein .18s ease-out; }
+  @keyframes slidein { from { transform: translateX(24px); opacity: .6; } to { transform: none; opacity: 1; } }
+}
 </style>
 </head>
 <body>
 
-<header>
-  <div class="house" aria-hidden="true"></div>
-  <h1>Registri HCS</h1>
-  <nav id="nav" class="hidden" aria-label="Registri">
-    <a href="#igraci" data-view="igraci">Igrači</a>
-    <a href="#klubovi" data-view="klubovi">Klubovi</a>
-  </nav>
-  <div class="who">
-    <span id="userName"></span>
-    <button id="btnLogout" class="btn btn-header hidden">Odjavi se</button>
+<header class="app-header">
+  <div class="app-header-inner">
+    <div class="header-brand">
+      <img src="https://curling.hr/assets/images/hcs-logo.png" alt="">
+      <div class="header-titles">
+        <h1>Registri</h1>
+        <p>Hrvatski curling savez</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <a href="https://curling.hr/" class="home-btn" title="Povratak na početnu stranicu Saveza">Početna</a>
+      <button id="btnLogin" class="hdr-btn hidden" title="Prijava">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+        Prijava
+      </button>
+      <span id="userName" class="user-name hidden"></span>
+      <button id="btnLogout" class="hdr-btn hidden" title="Odjava">Odjava</button>
+    </div>
   </div>
 </header>
 
 <main>
+  <nav id="tabs" class="tabs hidden" aria-label="Odabir registra">
+    <a href="#igraci" data-view="igraci">Igrači</a>
+    <a href="#klubovi" data-view="klubovi">Klubovi</a>
+    <a href="#ekipe" data-view="ekipe">Ekipe</a>
+  </nav>
+
   <div id="status" class="status info">Pokrećem…</div>
 
-  <section id="signin" class="panel signin hidden">
+  <section id="signin" class="card signin hidden">
     <h2>Prijava</h2>
-    <p>Prijavite se računom Hrvatskog curling saveza. Prijava se odvija na Microsoftovoj stranici, uz drugi faktor ako ga imate postavljenog.</p>
-    <button id="btnLogin" class="btn btn-primary">Prijavi se</button>
+    <p>Registri su dostupni samo ovlaštenim osobama. Prijavite se računom Hrvatskog curling saveza – prijava se odvija na Microsoftovoj stranici, uz drugi faktor ako ga imate postavljenog.</p>
+    <button id="btnLogin2" class="btn btn-primary">Prijavi se</button>
   </section>
 
-  <!-- IGRAČI -->
   <section id="view-igraci" class="hidden">
     <div class="toolbar">
-      <input id="pSearch" type="search" placeholder="Prezime, ime ili registarski broj" aria-label="Pretraži igrače">
+      <input id="pSearch" type="search" placeholder="Ime, prezime ili registarski broj" aria-label="Pretraži igrače">
       <select id="pClub" aria-label="Klub"></select>
       <select id="pStatus" aria-label="Status registracije">
-        <option value="active">Registrirani</option>
+        <option value="active">Samo registrirani</option>
         <option value="inactive">S prestankom registracije</option>
         <option value="all">Svi igrači</option>
       </select>
@@ -187,40 +225,34 @@
       <button id="btnNewPlayer" class="btn btn-primary">Novi igrač</button>
     </div>
     <p class="stats" id="pStats"></p>
-    <div class="panel scroll">
-      <table>
-        <thead><tr>
-          <th>Reg. br.</th><th>Prezime i ime</th><th>Klub</th>
-          <th class="col-opt">Registriran</th><th>Zdravstveno</th><th class="col-opt">Status</th>
-        </tr></thead>
-        <tbody id="pBody"></tbody>
-      </table>
-    </div>
+    <div class="card scroll"><table id="pTable"><thead></thead><tbody></tbody></table></div>
   </section>
 
-  <!-- KLUBOVI -->
   <section id="view-klubovi" class="hidden">
     <div class="toolbar">
       <input id="cSearch" type="search" placeholder="Naziv, mjesto ili OIB" aria-label="Pretraži klubove">
       <span class="spacer"></span>
       <button id="btnNewClub" class="btn btn-primary">Novi klub</button>
     </div>
-    <div class="panel scroll">
-      <table>
-        <thead><tr>
-          <th>Naziv</th><th class="col-opt">Puni naziv</th><th>Mjesto</th>
-          <th class="col-opt">Predsjednik</th><th class="num">Igrača</th><th class="col-opt">Članstvo</th>
-        </tr></thead>
-        <tbody id="cBody"></tbody>
-      </table>
+    <div class="card scroll"><table id="cTable"><thead></thead><tbody></tbody></table></div>
+  </section>
+
+  <section id="view-ekipe" class="hidden">
+    <div class="card notice">
+      <h2>Registar ekipa još nije povezan</h2>
+      <p id="ekipeMsg"></p>
     </div>
   </section>
 
-  <!-- ALATI -->
   <section id="view-alati" class="hidden">
-    <div class="panel tool">
+    <div class="card tool">
+      <h2>Mapa stupaca</h2>
+      <p class="help">Prikazna i interna imena stupaca svih registara. Ne sadrži osobne podatke – možete je poslati pri dogradnji aplikacije.</p>
+      <div id="colMaps"></div>
+    </div>
+    <div class="card tool">
       <h2>Prepisivanje prethodnih klubova u povijest</h2>
-      <p>Za svakog igrača kojem je polje <em>Povijest registracija</em> prazno, upisuje se: popis klubova iz stupca <em>Prethodni klubovi</em> (bez datuma, jer ih stupac nema), zatim trenutna registracija i, ako postoji, prestanak registracije. Usput se popunjava i skriveni stupac <em>Naslov</em> („Prezime Ime“). Igrači s već popunjenom poviješću se preskaču, pa je postupak siguran za ponovno pokretanje.</p>
+      <p>Za igrače s praznim poljem <em>Povijest registracija</em> upisuje se popis iz stupca <em>Prethodni klubovi</em>, trenutna registracija i eventualni prestanak. Igrači s već popunjenom poviješću se preskaču.</p>
       <p id="migInfo"></p>
       <pre id="migPreview" class="preview hidden"></pre>
       <button id="btnMigrate" class="btn btn-primary">Pokreni prepisivanje</button>
@@ -229,9 +261,7 @@
   </section>
 </main>
 
-<footer id="footer" class="hidden">
-  <a href="#alati">Administracija</a>
-</footer>
+<footer id="footer" class="hidden"><a href="#alati">Administracija</a></footer>
 
 <div id="backdrop" class="backdrop hidden"></div>
 <aside id="drawer" class="drawer hidden" role="dialog" aria-modal="true" aria-labelledby="drawerTitle"></aside>
@@ -277,11 +307,15 @@ const K = {                     // Registar klubova
   napomena: "Napomena"
 };
 
+/* Kategorije: dob na zadnji 30. lipnja */
+const JUNIOR_DO = 21;   // mlađi od 21 → Junior
+const VETERAN_OD = 50;  // 50 i više → Veteran
+
 /* Definicije formi */
 const PLAYER_BASIC = [
   { k: "broj", label: "Registarski broj", type: "text", req: true },
-  { k: "prezime", label: "Prezime", type: "text", req: true },
   { k: "ime", label: "Ime", type: "text", req: true },
+  { k: "prezime", label: "Prezime", type: "text", req: true },
   { k: "datumRod", label: "Datum rođenja", type: "date" },
   { k: "drzavljanstvo", label: "Državljanstvo", type: "text" },
   { k: "zdravstveno", label: "Zdravstveno uvjerenje vrijedi do", type: "date" },
@@ -319,15 +353,19 @@ const CLUB_FORM = [
 
 /* ================= Stanje ================= */
 const CFG = window.CONFIG || {};
+const LIST_NAMES = Object.assign({ ekipe: "Registar ekipa" }, CFG.lists || {});
 const SCOPES = ["User.Read", "Sites.ReadWrite.All"];
 const GRAPH = "https://graph.microsoft.com/v1.0";
-const S = { siteId: null, lists: {}, cols: {}, players: [], clubs: [], view: "igraci" };
+const S = {
+  siteId: null, lists: {}, cols: {}, players: [], clubs: [], view: "igraci",
+  sort: { igraci: { key: "datumReg", dir: -1 }, klubovi: { key: "naziv", dir: 1 } }
+};
 let msalApp = null, account = null;
 
 /* ================= Pomoćne ================= */
 const $ = (s, root = document) => root.querySelector(s);
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-const coll = new Intl.Collator("hr");
+const coll = new Intl.Collator("hr", { numeric: true, sensitivity: "base" });
 
 function setStatus(msg, kind = "info") {
   const el = $("#status");
@@ -353,6 +391,22 @@ function graphDate(iso) { return iso ? iso + "T12:00:00Z" : null; }
 function todayIso() { const t = new Date(); return t.getFullYear() + "-" + String(t.getMonth() + 1).padStart(2, "0") + "-" + String(t.getDate()).padStart(2, "0"); }
 function addDays(iso, n) { const d = new Date(iso + "T12:00:00Z"); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); }
 
+/* Dob na određeni datum (oba u ISO obliku) */
+function ageOn(birthIso, refIso) {
+  const [by, bm, bd] = birthIso.split("-").map(Number);
+  const [ry, rm, rd] = refIso.split("-").map(Number);
+  let a = ry - by;
+  if (rm < bm || (rm === bm && rd < bd)) a--;
+  return a;
+}
+/* Zadnji 30. lipnja, uključujući današnji dan ako je danas 30. lipnja */
+function lastJune30() {
+  const t = todayIso(); const y = Number(t.slice(0, 4));
+  const thisYear = y + "-06-30";
+  return t >= thisYear ? thisYear : (y - 1) + "-06-30";
+}
+const REF_DATE = lastJune30();
+
 /* ================= Prijava ================= */
 async function init() {
   if (typeof msal === "undefined") { setStatus("Knjižnica za prijavu (MSAL) se nije učitala. Provjerite internetsku vezu ili blokator sadržaja.", "error"); return; }
@@ -367,13 +421,17 @@ async function init() {
   try {
     const resp = await msalApp.handleRedirectPromise();
     account = resp ? resp.account : (msalApp.getAllAccounts()[0] || null);
-  } catch (e) { setStatus("Prijava nije uspjela:\n" + e.message, "error"); show("#signin"); return; }
+  } catch (e) { setStatus("Prijava nije uspjela:\n" + e.message, "error"); signedOut(); return; }
 
-  if (!account) { setStatus(""); show("#signin"); return; }
-  $("#userName").textContent = account.name || account.username;
-  show("#btnLogout");
+  if (!account) { setStatus(""); signedOut(); return; }
+  const nm = $("#userName");
+  nm.textContent = account.name || account.username;
+  nm.title = account.username || "";
+  show("#userName"); show("#btnLogout"); show("#btnLogin", false);
   await loadAll();
 }
+function signedOut() { show("#signin"); show("#btnLogin"); show("#userName", false); show("#btnLogout", false); }
+function login() { if (msalApp) msalApp.loginRedirect({ scopes: SCOPES }); }
 
 async function getToken() {
   try { return (await msalApp.acquireTokenSilent({ scopes: SCOPES, account })).accessToken; }
@@ -402,7 +460,6 @@ async function graph(path, opts = {}) {
 
 /* ================= Učitavanje ================= */
 function itemPath(listKey, id) { return "/sites/" + S.siteId + "/lists/" + S.lists[listKey] + "/items" + (id ? "/" + id : ""); }
-
 function normItem(it) {
   return {
     id: it.id, f: it.fields || {},
@@ -410,7 +467,6 @@ function normItem(it) {
     modifiedBy: it.lastModifiedBy && it.lastModifiedBy.user ? it.lastModifiedBy.user.displayName : ""
   };
 }
-
 async function loadList(key) {
   const out = [];
   let next = itemPath(key) + "?$expand=fields&$top=500";
@@ -428,9 +484,12 @@ async function loadAll() {
     const site = await graph(CFG.sitePath ? "/sites/" + CFG.spHost + ":" + CFG.sitePath : "/sites/" + CFG.spHost);
     S.siteId = site.id;
     const lists = await graph("/sites/" + site.id + "/lists?$select=id,displayName");
-    for (const [key, name] of Object.entries(CFG.lists)) {
+    for (const [key, name] of Object.entries(LIST_NAMES)) {
       const l = lists.value.find((x) => x.displayName === name);
-      if (!l) throw new Error("Lista „" + name + "“ nije pronađena. Dostupne liste: " + lists.value.map((x) => x.displayName).join(", "));
+      if (!l) {
+        if (key === "ekipe") continue;   // registar ekipa još ne mora postojati
+        throw new Error("Lista „" + name + "“ nije pronađena. Dostupne liste: " + lists.value.map((x) => x.displayName).join(", "));
+      }
       S.lists[key] = l.id;
       const cols = await graph("/sites/" + site.id + "/lists/" + l.id + "/columns");
       S.cols[key] = Object.fromEntries(cols.value.map((c) => [c.name, c]));
@@ -438,7 +497,7 @@ async function loadAll() {
     checkMapping();
     [S.players, S.clubs] = await Promise.all([loadList("igraci"), loadList("klubovi")]);
     setStatus("");
-    show("#nav"); show("#footer");
+    show("#tabs"); show("#footer");
     fillClubFilter();
     route();
   } catch (e) { setStatus(e.message, "error"); }
@@ -465,7 +524,8 @@ function clubName(c) { return c ? (cv(c, "naziv") || cv(c, "puniNaziv") || cv(c,
 function clubById(id) { return S.clubs.find((c) => String(c.id) === String(id)); }
 function playerClubName(p) { const id = pv(p, "klub"); return id ? clubName(clubById(id)) : ""; }
 function isActive(p) { return !pv(p, "prestanak"); }
-function fullName(p) { return [pv(p, "prezime"), pv(p, "ime")].filter(Boolean).join(" "); }
+function displayName(p) { return [pv(p, "ime"), pv(p, "prezime")].filter(Boolean).join(" "); }   // Ime Prezime
+function titleName(p) { return [pv(p, "prezime"), pv(p, "ime")].filter(Boolean).join(" "); }     // za stupac Naslov
 function sortedClubs() { return [...S.clubs].sort((a, b) => coll.compare(clubName(a), clubName(b))); }
 
 function health(p) {
@@ -474,6 +534,14 @@ function health(p) {
   if (z < t) return { s: "expired", label: "isteklo " + hrDate(z), cls: "b-err" };
   if (z <= addDays(t, 30)) return { s: "soon", label: "do " + hrDate(z), cls: "b-warn" };
   return { s: "ok", label: "do " + hrDate(z), cls: "b-ok" };
+}
+function category(p) {
+  const b = isoDate(pv(p, "datumRod"));
+  if (!b) return "";
+  const a = ageOn(b, REF_DATE);
+  if (a < JUNIOR_DO) return "Junior";
+  if (a >= VETERAN_OD) return "Veteran";
+  return "Senior";
 }
 
 function prethodniNames(p) {
@@ -496,25 +564,87 @@ function histLine(iso, stop, club) { return hrDate(iso) + " " + (stop ? "Prestan
 function appendHist(text, line) { const t = String(text || "").replace(/\s+$/, ""); return t ? t + "\n" + line : line; }
 
 /* ================= Usmjeravanje ================= */
+const VIEWS = ["igraci", "klubovi", "ekipe", "alati"];
 function route() {
   const v = (location.hash || "#igraci").slice(1);
-  S.view = ["igraci", "klubovi", "alati"].includes(v) ? v : "igraci";
-  for (const name of ["igraci", "klubovi", "alati"]) show("#view-" + name, name === S.view);
-  document.querySelectorAll("nav a").forEach((a) => a.toggleAttribute("aria-current", a.dataset.view === S.view));
-  document.querySelectorAll("nav a[aria-current]").forEach((a) => a.setAttribute("aria-current", "page"));
+  S.view = VIEWS.includes(v) ? v : "igraci";
+  for (const name of VIEWS) show("#view-" + name, name === S.view);
+  document.querySelectorAll("#tabs a").forEach((a) => {
+    if (a.dataset.view === S.view) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
+  });
   if (S.view === "igraci") renderPlayers();
   if (S.view === "klubovi") renderClubs();
+  if (S.view === "ekipe") renderTeams();
   if (S.view === "alati") renderTools();
 }
 window.addEventListener("hashchange", () => { if (S.siteId) route(); });
 
+/* ================= Tablica sa sortiranjem ================= */
+/* col: { key, label, sort(r) → vrijednost za sortiranje, cell(r) → HTML, cls } */
+function cmpVals(a, b) {
+  const ea = a === "" || a == null, eb = b === "" || b == null;
+  if (ea && eb) return 0; if (ea) return 1; if (eb) return -1;           // prazne uvijek na kraj
+  if (typeof a === "number" && typeof b === "number") return a - b;
+  return coll.compare(String(a), String(b));
+}
+function sortRows(rows, cols, st) {
+  const col = cols.find((c) => c.key === st.key) || cols[0];
+  return [...rows].sort((x, y) => {
+    const a = col.sort(x), b = col.sort(y);
+    const ea = a === "" || a == null, eb = b === "" || b == null;
+    if (ea !== eb) return ea ? 1 : -1;
+    return st.dir * cmpVals(a, b);
+  });
+}
+function renderTable(tableSel, cols, rows, view, rowAttrs, emptyMsg) {
+  const st = S.sort[view];
+  const table = $(tableSel);
+  table.tHead.innerHTML = "<tr>" + cols.map((c) => {
+    const active = st.key === c.key;
+    const aria = active ? ' aria-sort="' + (st.dir > 0 ? "ascending" : "descending") + '"' : "";
+    return '<th class="' + (c.cls || "") + '"' + aria + '><button type="button" data-sort="' + c.key + '">' + esc(c.label) +
+      '<span class="arrow" aria-hidden="true">' + (active ? (st.dir > 0 ? "▲" : "▼") : "") + "</span></button></th>";
+  }).join("") + "</tr>";
+  const body = table.tBodies[0];
+  if (!rows.length) { body.innerHTML = '<tr><td colspan="' + cols.length + '" class="empty">' + esc(emptyMsg) + "</td></tr>"; return; }
+  body.innerHTML = sortRows(rows, cols, st).map((r) => {
+    const a = rowAttrs(r);
+    return '<tr tabindex="0" data-id="' + esc(r.id) + '"' + (a.cls ? ' class="' + a.cls + '"' : "") + ">" +
+      cols.map((c) => '<td class="' + (c.cls || "") + '">' + c.cell(r) + "</td>").join("") + "</tr>";
+  }).join("");
+}
+function bindTable(tableSel, view, rerender, open) {
+  const t = $(tableSel);
+  t.tHead.addEventListener("click", (e) => {
+    const b = e.target.closest("[data-sort]"); if (!b) return;
+    const st = S.sort[view];
+    if (st.key === b.dataset.sort) st.dir = -st.dir; else { st.key = b.dataset.sort; st.dir = 1; }
+    rerender();
+    const nb = t.tHead.querySelector('[data-sort="' + b.dataset.sort + '"]'); if (nb) nb.focus();
+  });
+  const go = (e) => { const tr = e.target.closest("tr[data-id]"); if (tr) open(tr.dataset.id); };
+  t.tBodies[0].addEventListener("click", go);
+  t.tBodies[0].addEventListener("keydown", (e) => { if (e.key === "Enter") go(e); });
+}
+
 /* ================= Igrači: popis ================= */
+const PLAYER_COLS = [
+  { key: "broj", label: "Reg. br.", cls: "num", sort: (p) => pv(p, "broj") || "", cell: (p) => esc(pv(p, "broj")) },
+  { key: "ime", label: "Ime i prezime", sort: (p) => titleName(p), cell: (p) => esc(displayName(p)) },
+  { key: "klub", label: "Klub", sort: (p) => playerClubName(p), cell: (p) => esc(playerClubName(p)) },
+  { key: "kategorija", label: "Kategorija", sort: (p) => category(p), cell: (p) => esc(category(p)) },
+  { key: "datumReg", label: "Registriran", cls: "num col-opt", sort: (p) => isoDate(pv(p, "datumReg")), cell: (p) => esc(hrDate(isoDate(pv(p, "datumReg")))) },
+  { key: "zdravstveno", label: "Zdravstveno", sort: (p) => isoDate(pv(p, "zdravstveno")),
+    cell: (p) => { if (!isActive(p)) return ""; const h = health(p); return '<span class="badge ' + h.cls + '">' + esc(h.label) + "</span>"; } },
+  { key: "status", label: "Status", cls: "col-opt", sort: (p) => isoDate(pv(p, "prestanak")),
+    cell: (p) => isActive(p) ? "registriran" : '<span class="badge b-off">prestanak ' + esc(hrDate(isoDate(pv(p, "prestanak")))) + "</span>" }
+];
+
 function fillClubFilter() {
   const sel = $("#pClub"); const cur = sel.value;
   sel.innerHTML = '<option value="">Svi klubovi</option>' + sortedClubs().map((c) => '<option value="' + esc(c.id) + '">' + esc(clubName(c)) + "</option>").join("");
   sel.value = cur;
 }
-
 function filteredPlayers() {
   const q = $("#pSearch").value.trim().toLowerCase();
   const club = $("#pClub").value, st = $("#pStatus").value, h = $("#pHealth").value;
@@ -523,14 +653,10 @@ function filteredPlayers() {
     if (st === "inactive" && isActive(p)) return false;
     if (club && String(pv(p, "klub")) !== club) return false;
     if (h) { const hs = health(p).s; if (h === "bad" && !(hs === "none" || hs === "expired")) return false; if (h === "soon" && hs !== "soon") return false; }
-    if (q) {
-      const hay = [pv(p, "prezime"), pv(p, "ime"), pv(p, "broj")].join(" ").toLowerCase();
-      if (!hay.includes(q)) return false;
-    }
+    if (q && ![pv(p, "ime"), pv(p, "prezime"), pv(p, "broj")].join(" ").toLowerCase().includes(q)) return false;
     return true;
-  }).sort((a, b) => coll.compare(pv(a, "prezime") || "", pv(b, "prezime") || "") || coll.compare(pv(a, "ime") || "", pv(b, "ime") || ""));
+  });
 }
-
 function renderPlayers() {
   const rows = filteredPlayers();
   const active = S.players.filter(isActive);
@@ -538,36 +664,20 @@ function renderPlayers() {
   const soon = active.filter((p) => health(p).s === "soon").length;
   $("#pStats").innerHTML = "<span><b>" + active.length + "</b>registriranih</span><span><b>" + bad +
     "</b>bez važećeg zdravstvenog</span><span><b>" + soon + "</b>ističe u 30 dana</span><span><b>" + rows.length + "</b>prikazano</span>";
-  if (!rows.length) { $("#pBody").innerHTML = '<tr><td colspan="6" class="empty">Nema igrača za odabrane filtere.</td></tr>'; return; }
-  $("#pBody").innerHTML = rows.map((p) => {
-    const act = isActive(p), h = health(p);
-    return '<tr tabindex="0" data-id="' + esc(p.id) + '"' + (act ? "" : ' class="inactive"') + ">" +
-      '<td class="num">' + esc(pv(p, "broj")) + "</td>" +
-      "<td>" + esc(fullName(p)) + "</td>" +
-      "<td>" + esc(playerClubName(p)) + "</td>" +
-      '<td class="col-opt num">' + esc(hrDate(isoDate(pv(p, "datumReg")))) + "</td>" +
-      "<td>" + (act ? '<span class="badge ' + h.cls + '">' + esc(h.label) + "</span>" : "") + "</td>" +
-      '<td class="col-opt">' + (act ? "registriran" : '<span class="badge b-off">prestanak ' + esc(hrDate(isoDate(pv(p, "prestanak")))) + "</span>") + "</td></tr>";
-  }).join("");
+  renderTable("#pTable", PLAYER_COLS, rows, "igraci", (p) => ({ cls: isActive(p) ? "" : "inactive" }), "Nema igrača za odabrane filtere.");
 }
 ["#pSearch", "#pClub", "#pStatus", "#pHealth"].forEach((s) => $(s).addEventListener("input", renderPlayers));
-function rowOpen(tbodySel, fn) {
-  const tb = $(tbodySel);
-  tb.addEventListener("click", (e) => { const tr = e.target.closest("tr[data-id]"); if (tr) fn(tr.dataset.id); });
-  tb.addEventListener("keydown", (e) => { if (e.key === "Enter") { const tr = e.target.closest("tr[data-id]"); if (tr) fn(tr.dataset.id); } });
-}
-rowOpen("#pBody", (id) => openPlayer(id));
-rowOpen("#cBody", (id) => openClub(id));
+bindTable("#pTable", "igraci", renderPlayers, (id) => openPlayer(id));
 
-/* ================= Drawer ================= */
+/* ================= Bočni panel ================= */
 let lastFocus = null;
 function openDrawer(html) {
-  lastFocus = document.activeElement;
+  if ($("#drawer").classList.contains("hidden")) lastFocus = document.activeElement;
   const d = $("#drawer"); d.innerHTML = html; show("#drawer"); show("#backdrop");
   const close = d.querySelector(".close"); if (close) close.addEventListener("click", closeDrawer);
   const first = d.querySelector("input, select, textarea") || close; if (first) first.focus();
 }
-function closeDrawer() { show("#drawer", false); show("#backdrop", false); $("#drawer").innerHTML = ""; if (lastFocus) lastFocus.focus(); }
+function closeDrawer() { show("#drawer", false); show("#backdrop", false); $("#drawer").innerHTML = ""; if (lastFocus && document.body.contains(lastFocus)) lastFocus.focus(); }
 $("#backdrop").addEventListener("click", closeDrawer);
 document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("#drawer").classList.contains("hidden")) closeDrawer(); });
 function drawerHead(title, sub) {
@@ -594,20 +704,22 @@ function openPlayer(id) {
         : "<li" + (e.stop ? ' class="stop"' : "") + "><time>" + esc(e.date) + "</time>" + esc(e.type) + ": " + esc(e.club) + "</li>").join("") + "</ul>"
     : '<p class="help">Povijest još nije upisana.</p>';
   const sub = esc("Reg. br. " + (pv(p, "broj") || "–")) + " · " + (act ? esc(playerClubName(p)) : "prestanak registracije " + esc(hrDate(isoDate(pv(p, "prestanak")))));
-  openDrawer(drawerHead(fullName(p), sub) +
+  const cat = category(p);
+  openDrawer(drawerHead(displayName(p), sub) +
     '<div class="drawer-body">' +
     "<h3>Registracija</h3>" +
     dl([
       ["Klub", esc(playerClubName(p))],
       ["Datum registracije", esc(hrDate(isoDate(pv(p, "datumReg"))))],
       ["Prestanak registracije", esc(hrDate(isoDate(pv(p, "prestanak"))))],
+      ["Kategorija", cat ? esc(cat) + ' <span class="help">(dob na ' + esc(hrDate(REF_DATE)) + ")</span>" : ""],
       ["Zdravstveno", act ? '<span class="badge ' + h.cls + '">' + esc(h.label) + "</span>" : esc(hrDate(isoDate(pv(p, "zdravstveno"))))]
     ]) +
     "<h3>Osobni podaci</h3>" +
     dl([
       ["Registarski broj", esc(pv(p, "broj"))],
-      ["Prezime", esc(pv(p, "prezime"))],
       ["Ime", esc(pv(p, "ime"))],
+      ["Prezime", esc(pv(p, "prezime"))],
       ["Datum rođenja", esc(hrDate(isoDate(pv(p, "datumRod"))))],
       ["Državljanstvo", esc(pv(p, "drzavljanstvo"))],
       ["Napomena", esc(pv(p, "napomena"))]
@@ -713,8 +825,8 @@ function dupBroj(broj, exceptId) {
 
 function regForm(p) {
   const act = isActive(p);
-  const defs = [{ k: "klub", label: "Klub", type: "club", req: true }, { k: "datumReg", label: "Datum registracije", type: "date", req: true }];
-  formDrawer(act ? "Registracija u klub" : "Ponovna registracija", esc(fullName(p)),
+  const defs = PLAYER_REG;
+  formDrawer(act ? "Registracija u klub" : "Ponovna registracija", esc(displayName(p)),
     inputHtml(defs[0], act ? pv(p, "klub") : "", "igraci", P) + inputHtml(defs[1], todayIso(), "igraci", P) +
     '<p class="help">Klub i datum registracije igrača postaju novo trenutno stanje' + (act ? "" : ", prestanak registracije se briše") + ", a u povijest se dodaje redak o registraciji.</p>",
     "Registriraj",
@@ -725,7 +837,7 @@ function regForm(p) {
         [P.klub]: Number(v.klub),
         [P.datumReg]: graphDate(v.datumReg),
         [P.povijest]: appendHist(pv(p, "povijest"), histLine(v.datumReg, false, club)),
-        [P.naslov]: fullName(p)
+        [P.naslov]: titleName(p)
       };
       if (!act) fields[P.prestanak] = null;
       const np = await patchItem("igraci", p.id, fields);
@@ -736,7 +848,7 @@ function regForm(p) {
 
 function stopForm(p) {
   const def = { k: "prestanak", label: "Datum prestanka registracije", type: "date", req: true };
-  formDrawer("Prestanak registracije", esc(fullName(p) + " · " + playerClubName(p)),
+  formDrawer("Prestanak registracije", esc(displayName(p) + " · " + playerClubName(p)),
     inputHtml(def, todayIso(), "igraci", P) +
     '<p class="help">Igrač ostaje u registru, a u povijest se dodaje redak o prestanku registracije.</p>',
     "Upiši prestanak",
@@ -747,7 +859,7 @@ function stopForm(p) {
       const np = await patchItem("igraci", p.id, {
         [P.prestanak]: graphDate(v.prestanak),
         [P.povijest]: appendHist(pv(p, "povijest"), histLine(v.prestanak, true, playerClubName(p))),
-        [P.naslov]: fullName(p)
+        [P.naslov]: titleName(p)
       });
       afterSave("Prestanak registracije upisan."); openPlayer(np.id);
     },
@@ -757,7 +869,7 @@ function stopForm(p) {
 function playerEditForm(p) {
   const all = [...PLAYER_BASIC, ...PLAYER_FIX];
   const orig = currentValues(all, p, P);
-  formDrawer("Uredi podatke", esc(fullName(p)),
+  formDrawer("Uredi podatke", esc(displayName(p)),
     PLAYER_BASIC.map((d) => inputHtml(d, orig[d.k], "igraci", P)).join("") +
     "<details><summary>Ispravak registracije i povijesti</summary>" +
     '<p class="help">Samo za ispravak pogrešno upisanih podataka. Ove izmjene ne dodaju ništa u povijest; za stvarnu registraciju ili prestanak koristite gumbe na kartici igrača.</p>' +
@@ -778,7 +890,7 @@ function playerEditForm(p) {
 
 function newPlayerForm() {
   const defs = [...PLAYER_BASIC.slice(0, 3), ...PLAYER_REG, ...PLAYER_BASIC.slice(3)];
-  const vals = { broj: "", prezime: "", ime: "", klub: "", datumReg: todayIso(), datumRod: "", drzavljanstvo: "Hrvatska", zdravstveno: "", napomena: "" };
+  const vals = { broj: "", ime: "", prezime: "", klub: "", datumReg: todayIso(), datumRod: "", drzavljanstvo: "Hrvatska", zdravstveno: "", napomena: "" };
   formDrawer("Novi igrač", "", defs.map((d) => inputHtml(d, vals[d.k], "igraci", P)).join(""), "Spremi igrača",
     async (form) => {
       const v = readValues(form, defs); const err = validate(defs, v); if (err) throw new Error(err);
@@ -797,26 +909,26 @@ $("#btnNewPlayer").addEventListener("click", newPlayerForm);
 function clubPlayers(c, onlyActive = true) {
   return S.players.filter((p) => String(pv(p, "klub")) === String(c.id) && (!onlyActive || isActive(p)));
 }
+const CLUB_COLS = [
+  { key: "naziv", label: "Naziv", sort: (c) => clubName(c), cell: (c) => esc(clubName(c)) },
+  { key: "puniNaziv", label: "Puni naziv", cls: "col-opt", sort: (c) => cv(c, "puniNaziv") || "", cell: (c) => esc(cv(c, "puniNaziv")) },
+  { key: "mjesto", label: "Mjesto", sort: (c) => cv(c, "mjesto") || "", cell: (c) => esc(cv(c, "mjesto")) },
+  { key: "predsjednik", label: "Predsjednik", cls: "col-opt", sort: (c) => cv(c, "predsjednik") || "", cell: (c) => esc(cv(c, "predsjednik")) },
+  { key: "igraca", label: "Igrača", cls: "num", sort: (c) => clubPlayers(c).length, cell: (c) => String(clubPlayers(c).length) },
+  { key: "clanstvo", label: "Članstvo", cls: "col-opt", sort: (c) => cv(c, "vrsta") || "",
+    cell: (c) => { const end = isoDate(cv(c, "prestanak")); return end ? '<span class="badge b-off">prestanak ' + esc(hrDate(end)) + "</span>" : esc(cv(c, "vrsta")); } }
+];
 function renderClubs() {
   const q = $("#cSearch").value.trim().toLowerCase();
-  const rows = sortedClubs().filter((c) => !q || [clubName(c), cv(c, "puniNaziv"), cv(c, "mjesto"), cv(c, "oib")].join(" ").toLowerCase().includes(q));
-  if (!rows.length) { $("#cBody").innerHTML = '<tr><td colspan="6" class="empty">Nema klubova za ovu pretragu.</td></tr>'; return; }
-  $("#cBody").innerHTML = rows.map((c) => {
-    const end = isoDate(cv(c, "prestanak"));
-    return '<tr tabindex="0" data-id="' + esc(c.id) + '"' + (end ? ' class="inactive"' : "") + ">" +
-      "<td>" + esc(clubName(c)) + "</td>" +
-      '<td class="col-opt">' + esc(cv(c, "puniNaziv")) + "</td>" +
-      "<td>" + esc(cv(c, "mjesto")) + "</td>" +
-      '<td class="col-opt">' + esc(cv(c, "predsjednik")) + "</td>" +
-      '<td class="num">' + clubPlayers(c).length + "</td>" +
-      '<td class="col-opt">' + (end ? '<span class="badge b-off">prestanak ' + esc(hrDate(end)) + "</span>" : esc(cv(c, "vrsta"))) + "</td></tr>";
-  }).join("");
+  const rows = S.clubs.filter((c) => !q || [clubName(c), cv(c, "puniNaziv"), cv(c, "mjesto"), cv(c, "oib")].join(" ").toLowerCase().includes(q));
+  renderTable("#cTable", CLUB_COLS, rows, "klubovi", (c) => ({ cls: isoDate(cv(c, "prestanak")) ? "inactive" : "" }), "Nema klubova za ovu pretragu.");
 }
 $("#cSearch").addEventListener("input", renderClubs);
+bindTable("#cTable", "klubovi", renderClubs, (id) => openClub(id));
 
 function openClub(id) {
   const c = clubById(id); if (!c) return;
-  const pl = clubPlayers(c).sort((a, b) => coll.compare(fullName(a), fullName(b)));
+  const pl = clubPlayers(c).sort((a, b) => coll.compare(titleName(a), titleName(b)));
   const d = (k) => esc(hrDate(isoDate(cv(c, k))));
   const email = cv(c, "email");
   openDrawer(drawerHead(clubName(c), esc(cv(c, "puniNaziv") || "")) +
@@ -830,7 +942,7 @@ function openClub(id) {
       ["Prijem u članstvo", d("prijem")], ["Prestanak članstva", d("prestanak")], ["Napomena", esc(cv(c, "napomena"))]
     ]) +
     "<h3>Registrirani igrači (" + pl.length + ")</h3>" +
-    (pl.length ? '<ul class="timeline">' + pl.map((p) => '<li><button class="link" data-pid="' + esc(p.id) + '">' + esc(fullName(p)) + "</button> <span class=\"help\">reg. br. " + esc(pv(p, "broj")) + "</span></li>").join("") + "</ul>"
+    (pl.length ? '<ul class="timeline">' + pl.map((p) => '<li><button class="link" data-pid="' + esc(p.id) + '">' + esc(displayName(p)) + '</button> <span class="help">reg. br. ' + esc(pv(p, "broj")) + "</span></li>").join("") + "</ul>"
       : '<p class="help">Klub trenutno nema registriranih igrača.</p>') +
     modifiedLine(c) + "</div>" +
     '<div class="drawer-foot"><button class="btn btn-primary" data-act="edit">Uredi podatke</button></div>');
@@ -856,7 +968,28 @@ function clubForm(c) {
 }
 $("#btnNewClub").addEventListener("click", () => clubForm(null));
 
-/* ================= Alati: jednokratno prepisivanje ================= */
+/* ================= Ekipe ================= */
+function renderTeams() {
+  $("#ekipeMsg").innerHTML = S.lists.ekipe
+    ? "Lista „" + esc(LIST_NAMES.ekipe) + "“ je pronađena. Pošaljite mapu njezinih stupaca (Administracija → Mapa stupaca) pa ćemo dodati prikaz i uređivanje ekipa."
+    : "Kad na intranet siteu kreirate listu „" + esc(LIST_NAMES.ekipe) + "“, ovdje će se pojaviti registar ekipa.";
+}
+
+/* ================= Administracija ================= */
+function colType(c) {
+  for (const t of ["text", "choice", "dateTime", "number", "boolean", "lookup", "personOrGroup", "currency", "calculated"]) if (c[t]) return t;
+  return "—";
+}
+const SKIP_COLS = new Set(["ContentType", "Attachments", "LinkTitle", "LinkTitleNoMenu", "Edit", "DocIcon", "ItemChildCount", "FolderChildCount",
+  "_ComplianceFlags", "_ComplianceTag", "_ComplianceTagWrittenTime", "_ComplianceTagUserId", "_IsRecord", "AppAuthor", "AppEditor", "_UIVersionString", "_ColorTag", "ComplianceAssetId"]);
+function renderColMaps() {
+  $("#colMaps").innerHTML = Object.keys(S.lists).map((key) => {
+    const cols = Object.values(S.cols[key]).filter((c) => !c.hidden && !c.readOnly && !SKIP_COLS.has(c.name));
+    return "<h3>" + esc(LIST_NAMES[key]) + '</h3><div class="scroll"><table><thead><tr><th style="padding:9px 12px">Prikazno ime</th><th style="padding:9px 12px">Interno ime</th><th style="padding:9px 12px">Tip</th><th style="padding:9px 12px">Obavezno</th></tr></thead><tbody>' +
+      cols.map((c) => '<tr style="cursor:default"><td>' + esc(c.displayName) + "</td><td><code>" + esc(c.name) + "</code></td><td>" + esc(colType(c)) +
+        (c.text && c.text.allowMultipleLines ? " (više redaka)" : "") + "</td><td>" + (c.required ? "da" : "") + "</td></tr>").join("") + "</tbody></table></div>";
+  }).join("");
+}
 function migrationText(p) {
   const lines = prethodniNames(p).map((n) => "Prethodni klub: " + n);
   const club = playerClubName(p), reg = isoDate(pv(p, "datumReg")), end = isoDate(pv(p, "prestanak"));
@@ -868,10 +1001,10 @@ function migrationCandidates() {
   return S.players.filter((p) => !String(pv(p, "povijest") || "").trim()).map((p) => ({ p, text: migrationText(p) })).filter((x) => x.text);
 }
 function renderTools() {
+  renderColMaps();
   const c = migrationCandidates();
   $("#migInfo").textContent = c.length ? "Igrača za prepisivanje: " + c.length + ". Primjer za prva tri:" : "Nema igrača s praznom poviješću – prepisivanje nije potrebno.";
-  const pre = $("#migPreview");
-  pre.textContent = c.slice(0, 3).map((x) => fullName(x.p) + "\n" + x.text).join("\n\n");
+  $("#migPreview").textContent = c.slice(0, 3).map((x) => displayName(x.p) + "\n" + x.text).join("\n\n");
   show("#migPreview", c.length > 0);
   $("#btnMigrate").disabled = !c.length;
 }
@@ -884,16 +1017,17 @@ $("#btnMigrate").addEventListener("click", async () => {
   for (const [i, x] of c.entries()) {
     prog.textContent = "Upisujem " + (i + 1) + " / " + c.length + "…";
     try {
-      await graph(itemPath("igraci", x.p.id) + "/fields", { method: "PATCH", body: { [P.povijest]: x.text, [P.naslov]: fullName(x.p) } });
-      x.p.f[P.povijest] = x.text; x.p.f[P.naslov] = fullName(x.p); ok++;
-    } catch (e) { fails.push(fullName(x.p) + ": " + e.message); }
+      await graph(itemPath("igraci", x.p.id) + "/fields", { method: "PATCH", body: { [P.povijest]: x.text, [P.naslov]: titleName(x.p) } });
+      x.p.f[P.povijest] = x.text; x.p.f[P.naslov] = titleName(x.p); ok++;
+    } catch (e) { fails.push(displayName(x.p) + ": " + e.message); }
   }
   prog.textContent = "Gotovo: upisano " + ok + (fails.length ? ", neuspjelo " + fails.length + ":\n" + fails.join("\n") : ".");
   renderTools();
 });
 
 /* ================= Pokretanje ================= */
-$("#btnLogin").addEventListener("click", () => msalApp.loginRedirect({ scopes: SCOPES }));
+$("#btnLogin").addEventListener("click", login);
+$("#btnLogin2").addEventListener("click", login);
 $("#btnLogout").addEventListener("click", () => msalApp.logoutRedirect({ account, postLogoutRedirectUri: CFG.redirectUri }));
 init();
 </script>
